@@ -12,11 +12,6 @@ import {
 
 const uploadBtn = document.getElementById("uploadBtn");
 
-document.getElementById("imageInput").addEventListener("change", (e) => {
-  const fileName = e.target.files[0]?.name || "未选择任何文件";
-  document.getElementById("fileName").textContent = fileName;
-});
-
 uploadBtn.addEventListener("click", async () => {
   const file = document.getElementById("imageInput").files[0];
   const message = document.getElementById("message").value;
@@ -30,6 +25,9 @@ uploadBtn.addEventListener("click", async () => {
   status.textContent = "上传中...";
 
   try {
+    // ✅ 修复：定义 storageRef
+    const storageRef = ref(storage, `uploads/${Date.now()}_${file.name}`);
+
     const snapshot = await uploadBytes(storageRef, file);
     const downloadURL = await getDownloadURL(snapshot.ref);
   
@@ -47,5 +45,4 @@ uploadBtn.addEventListener("click", async () => {
     console.error("上传失败", error);
     status.textContent = "上传失败，请重试";
   }
-  
 });
