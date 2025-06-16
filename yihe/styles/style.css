@@ -1,0 +1,95 @@
+/* 通用设置 */
+body {
+  background: linear-gradient(to top left, #fff1f5, #f9f9ff);
+  font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #444;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+/* 页面标题 */
+h1 {
+  font-size: 2.2em;
+  color: #d6336c;
+  margin-bottom: 30px;
+}
+
+/* 上传容器 */
+.upload-box {
+  background: #ffffffee;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  padding: 30px;
+  max-width: 420px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 输入框和按钮 */
+input[type="file"],
+textarea {
+  width: 100%;
+  font-size: 1em;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+textarea {
+  height: 100px;
+  resize: none;
+  background: #fffafc;
+}
+
+button {
+  padding: 12px;
+  font-size: 1em;
+  background-color: #f78da7;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background-color: #f45c9c;
+}
+
+/* 状态提示 */
+#status {
+  color: #888;
+  font-size: 0.9em;
+  margin-top: 10px;
+}
+
+/* 留言展示样式 */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.card {
+  width: 260px;
+  border-radius: 16px;
+  background: #fffdfd;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  padding: 15px;
+  text-align: center;
+}
+
+.card img {
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+.card p {
+  margin-top: 12px;
+  font-size: 15px;
+  color: #555;
+}
