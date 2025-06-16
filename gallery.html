@@ -2,12 +2,76 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <title>她写给你的话 💌</title>
-  <link rel="stylesheet" href="./style.css" />
-  <script type="module" src="./gallery-script.js"></script>
+  <title>她写下的话 💌</title>
+  <link rel="stylesheet" href="./styles/style.css" />
+  <script type="module" src="./scripts/gallery-script.js"></script>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #fff1f5, #f9f9ff);
+      font-family: "Helvetica Neue", "PingFang SC", sans-serif;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .nav {
+      margin-bottom: 30px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #f45c9c;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: #d6336c;
+      margin-bottom: 30px;
+    }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding-bottom: 40px;
+    }
+
+    .card {
+      background: #ffffffdd;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      padding: 15px;
+      max-width: 280px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .card img {
+      max-width: 100%;
+      border-radius: 12px;
+    }
+
+    .card p {
+      margin-top: 10px;
+      font-size: 15px;
+      color: #555;
+    }
+  </style>
 </head>
 <body>
-  <h1>她留下的照片和留言 🥺</h1>
+  <div class="nav">
+    <a href="./index.html">🏠 首页</a>
+    <a href="./upload.html">📸 上传留言</a>
+  </div>
+
+  <h1>💗 她写给你的话 💗</h1>
   <div id="gallery" class="gallery"></div>
 </body>
 </html>

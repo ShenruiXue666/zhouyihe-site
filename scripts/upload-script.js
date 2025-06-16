@@ -12,6 +12,11 @@ import {
 
 const uploadBtn = document.getElementById("uploadBtn");
 
+document.getElementById("imageInput").addEventListener("change", (e) => {
+  const fileName = e.target.files[0]?.name || "未选择任何文件";
+  document.getElementById("fileName").textContent = fileName;
+});
+
 uploadBtn.addEventListener("click", async () => {
   const file = document.getElementById("imageInput").files[0];
   const message = document.getElementById("message").value;
@@ -25,21 +30,22 @@ uploadBtn.addEventListener("click", async () => {
   status.textContent = "上传中...";
 
   try {
-    const storageRef = ref(storage, "images/" + file.name);
-    await uploadBytes(storageRef, file);
-    const imageUrl = await getDownloadURL(storageRef);
-
+    const snapshot = await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(snapshot.ref);
+  
     await addDoc(collection(db, "messages"), {
-      imageUrl,
-      message,
+      message: message,
+      imageUrl: downloadURL,
       createdAt: serverTimestamp()
     });
-
-    status.textContent = "上传成功 🎉";
-    document.getElementById("imageInput").value = "";
-    document.getElementById("message").value = "";
+  
+    status.textContent = "上传成功！正在跳转...";
+    setTimeout(() => {
+      window.location.href = "./gallery.html";
+    }, 1500);
   } catch (error) {
-    status.textContent = "上传失败 ❌";
-    console.error(error);
+    console.error("上传失败", error);
+    status.textContent = "上传失败，请重试";
   }
+  
 });
