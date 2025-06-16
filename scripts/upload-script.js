@@ -1,3 +1,5 @@
+console.log("✅ 脚本已加载！");
+
 import { db, storage } from "./firebase.js";
 import {
   collection,
