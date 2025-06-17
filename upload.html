@@ -126,12 +126,5 @@
     <button id="uploadBtn">上传</button>
     <p id="status"></p>
   </div>
-
-  <script type="module">
-    document.getElementById("imageInput").addEventListener("change", (e) => {
-      const fileName = e.target.files[0]?.name || "未选择任何文件";
-      document.getElementById("fileName").textContent = fileName;
-    });
-  </script>
 </body>
 </html>
