@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://www.zhouyihe.me"],
+    "method": ["GET", "POST", "PUT", "OPTIONS"],
+    "responseHeader": ["Content-Type"],
+    "maxAgeSeconds": 3600
+  }
+]

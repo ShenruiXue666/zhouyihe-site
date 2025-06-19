@@ -27,9 +27,9 @@ uploadBtn.addEventListener("click", async () => {
   const message = document.getElementById("message").value;
   const status = document.getElementById("status");
 
-  if (!file || !message.trim()) {
-    status.textContent = "请上传图片并写点话";
-    console.log("验证失败：", { file: !!file, message: !!message.trim() });
+  if (!file && !message.trim()) {
+    status.textContent = "请至少上传图片或写点话";
+    console.log("验证失败：两项都为空");
     return;
   }
 
@@ -37,22 +37,30 @@ uploadBtn.addEventListener("click", async () => {
   console.log("开始上传...");
 
   try {
-    const storageRef = ref(storage, `images/${Date.now()}_${file.name}`);
-    console.log("创建存储引用:", storageRef);
-    
-    const snapshot = await uploadBytes(storageRef, file);
-    console.log("文件上传成功:", snapshot);
-    
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    console.log("获取下载URL:", downloadURL);
-  
+    let imageUrl = "";
+    let imageName = "";
+
+    if (file) {
+      imageName = `${Date.now()}_${file.name}`;
+      const storageRef = ref(storage, `images/${imageName}`);
+      console.log("创建存储引用:", storageRef);
+
+      const snapshot = await uploadBytes(storageRef, file);
+      console.log("文件上传成功:", snapshot);
+
+      imageUrl = await getDownloadURL(snapshot.ref);
+      console.log("获取下载URL:", imageUrl);
+    }
+
     await addDoc(collection(db, "messages"), {
-      message: message,
-      imageUrl: downloadURL,
+      message: message || "",
+      imageUrl: imageUrl,
+      imageName: imageName,
       createdAt: serverTimestamp()
     });
+
     console.log("数据保存到数据库成功");
-  
+
     status.textContent = "上传成功！正在跳转...";
     setTimeout(() => {
       window.location.href = "./gallery.html";
