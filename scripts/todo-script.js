@@ -11,9 +11,9 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 // 元素选择
-const taskInput = document.getElementById("taskInput");
 const addTaskBtn = document.getElementById("addTaskBtn");
-const taskList = document.getElementById("taskList");
+const taskInput = document.getElementById("todoInput");
+const taskList = document.getElementById("todoList");
 
 // 密码提示（可自定义）
 const correctPassword = "tianwanggaidihu"; // 安全词拼音版本
