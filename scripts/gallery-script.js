@@ -19,44 +19,48 @@ async function loadMessages() {
   const querySnapshot = await getDocs(q);
 
   querySnapshot.forEach((docSnap) => {
-  const data = docSnap.data();
-  const docId = docSnap.id;
-  const imageUrl = data.imageUrl;
-  const message = data.message;
-  const imageName = data.imageName;
+    const data = docSnap.data();
+    const docId = docSnap.id;
+    const { imageUrl, message, imageName, createdAt } = data;
 
-  const card = document.createElement("div");
-  card.className = "card";
-  card.setAttribute("data-id", docId);
-  card.setAttribute("data-img", imageName);
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.id = docId;
+    card.dataset.img = imageName;
 
-  if (imageUrl) {
-    const img = document.createElement("img");
-    img.src = imageUrl;
-    img.alt = "留言图片";
-    card.appendChild(img);
-  } else {
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-    bubble.textContent = "🗯️";
-    card.appendChild(bubble);
-  }
+    // 图片
+    if (imageUrl) {
+      const img = document.createElement("img");
+      img.src = imageUrl;
+      img.alt = "留言图片";
+      card.appendChild(img);
+    }
 
-  const text = document.createElement("p");
-  text.textContent = message || "（无文字）";
-  card.appendChild(text);
+    // 留言内容（文字气泡）
+    const text = document.createElement("p");
+    text.textContent = message || "（无文字）";
+    card.appendChild(text);
 
-  const delBtn = document.createElement("button");
-  delBtn.className = "delete-btn";
-  delBtn.textContent = "删除";
-  card.appendChild(delBtn);
+    // 时间戳
+    if (createdAt?.toDate) {
+      const time = document.createElement("div");
+      const date = createdAt.toDate();
+      time.className = "timestamp";
+      time.textContent = `🎀 ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+      card.appendChild(time);
+    }
 
-  gallery.appendChild(card);
-});
+    // 删除按钮
+    const delBtn = document.createElement("button");
+    delBtn.className = "delete-btn";
+    delBtn.textContent = "删除";
+    card.appendChild(delBtn);
 
+    gallery.appendChild(card);
+  });
 }
 
-// 删除事件监听
+// 删除功能
 gallery.addEventListener("click", async (e) => {
   if (e.target.classList.contains("delete-btn")) {
     const card = e.target.closest(".card");
@@ -66,19 +70,12 @@ gallery.addEventListener("click", async (e) => {
     if (!confirm("确认删除这条留言和图片吗？")) return;
 
     try {
-      // 删除 Firestore 文档
       await deleteDoc(doc(db, "messages", docId));
-
-      // 删除 Storage 文件
-      const imageRef = ref(storage, `images/${imageName}`);
-      await deleteObject(imageRef);
-
-      // 从页面移除
-      card.classList.add("fade-out");
-      setTimeout(() => {
-        card.remove();
-      }, 500); // 等动画结束后移除
-
+      if (imageName) {
+        const imageRef = ref(storage, `images/${imageName}`);
+        await deleteObject(imageRef);
+      }
+      card.remove();
     } catch (err) {
       console.error("删除失败", err);
       alert("❌ 删除失败，请重试！");
