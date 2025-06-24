@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我们的To Do List</title>
+  <link rel="stylesheet" href="./styles/style.css" />
   <script type="module" src="./scripts/todo-script.js"></script>
   <style>
     body {
@@ -30,6 +31,10 @@
       border: 1px solid #ddd;
       border-radius: 8px;
       font-size: 1em;
+    }
+
+    input[type="file"] {
+      display: none;
     }
 
     button {
@@ -62,26 +67,39 @@
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: 0.2s ease;
+      flex-direction: column;
+      transition: background 0.3s ease;
     }
 
-    li.done {
-      color: #aaa;
-      background: #f0f0f0;
+    li.done .todo-text {
       text-decoration: line-through;
+      color: #aaa;
     }
 
     .todo-text {
-      flex: 1;
       cursor: pointer;
+      font-weight: bold;
+    }
+
+    .todo-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
     }
 
     .todo-date {
-      margin-left: 10px;
       font-size: 0.8em;
       color: #999;
+      margin-left: 12px;
+      white-space: nowrap;
+    }
+
+    .memory-img {
+      margin-top: 10px;
+      border-radius: 10px;
+      max-width: 100%;
+      max-height: 200px;
     }
 
     .delete-btn {
@@ -97,6 +115,7 @@
     .delete-btn:hover {
       background: #ddd;
     }
+
     .nav {
       margin-bottom: 30px;
     }
@@ -107,6 +126,18 @@
       margin: 0 10px;
       font-weight: bold;
     }
+
+    .section-header {
+      font-size: 1.2em;
+      margin-top: 30px;
+      color: #888;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .collapsed {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -114,11 +145,29 @@
     <a href="./index.html">🏠 首页</a>
     <a href="./gallery.html">💌 查看留言</a>
   </div>
+
   <h1>我们的To Do List ✨</h1>
+
   <div class="input-box">
-    <input type="text" id="todoInput" placeholder="想和她一起做什么...">
+    <input type="text" id="todoInput" placeholder="想一起做什么...">
     <button id="addTaskBtn" class="add-button">添加</button>
   </div>
-  <ul id="todoList"></ul>
+
+  <input type="file" id="memoryImageInput" accept="image/*" />
+
+  <div>
+    <h3 class="section-header" onclick="toggleSection('activeList')">📌 正在进行中</h3>
+    <ul id="activeList"></ul>
+
+    <h3 class="section-header" onclick="toggleSection('doneList')">✅ 已完成（点击展开/收起）</h3>
+    <ul id="doneList" class="collapsed"></ul>
+  </div>
+
+  <script>
+    function toggleSection(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle("collapsed");
+    }
+  </script>
 </body>
 </html>
