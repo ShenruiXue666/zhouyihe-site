@@ -2,36 +2,27 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <title>她写下的话 💌</title>
-  <link rel="stylesheet" href="./styles/style.css" />
-  <script type="module" src="./scripts/gallery-script.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💌写给大王的话～</title>
+  <link rel="stylesheet" href="./styles/style.css">
   <style>
     body {
-      background: linear-gradient(to bottom, #fff1f5, #f9f9ff);
       font-family: "Helvetica Neue", "PingFang SC", sans-serif;
-      padding: 30px;
+      background: linear-gradient(to bottom, #fff1f5, #f9f9ff);
+      padding: 30px 20px;
+      color: #444;
       text-align: center;
     }
-    /* 卡片删除动画 */
-    .card.fade-out {
-      animation: fadeOut 0.5s forwards ease;
-    }
 
-    @keyframes fadeOut {
-      0% {
-        opacity: 1;
-        transform: scale(1);
-      }
-      100% {
-        opacity: 0;
-        transform: scale(0.8);
-      }
+    h1 {
+      font-size: 2em;
+      color: #d6336c;
+      margin-bottom: 20px;
     }
 
     .nav {
       margin-bottom: 30px;
     }
-
     .nav a {
       text-decoration: none;
       color: #f45c9c;
@@ -39,72 +30,61 @@
       font-weight: bold;
     }
 
-    h1 {
-      font-size: 2em;
-      color: #d6336c;
-      margin-bottom: 30px;
-    }
-
     .gallery {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
-      padding-bottom: 40px;
     }
 
-    .card {
-      background: #ffffffdd;
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-      padding: 15px;
-      max-width: 280px;
-      text-align: center;
-      transition: all 0.2s ease;
+    .message-card {
+      width: 300px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease;
+    }
+
+    .message-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    }
+
+    .message-card img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-bottom: 1px solid #f0f0f0;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .message-text {
+      background: #ffeaf1;
+      margin: 0;
+      padding: 16px 18px;
+      font-size: 1em;
+      border-radius: 0 0 20px 20px;
+      text-align: left;
       position: relative;
     }
 
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    }
-
-    .card img {
-      max-width: 100%;
-      border-radius: 12px;
-    }
-
-    .card p {
-      margin-top: 10px;
-      font-size: 15px;
-      color: #555;
-    }
-
-    .delete-btn {
+    .message-text::before {
+      content: '💬';
       position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #f45c9c;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 5px 10px;
-      font-size: 12px;
-      cursor: pointer;
+      left: 16px;
+      top: -16px;
+      font-size: 1.2em;
     }
 
-    .delete-btn:hover {
-      background: #d6336c;
+    .timestamp {
+      font-size: 0.8em;
+      color: #aaa;
+      text-align: right;
+      padding: 6px 18px 10px;
     }
-    .card .bubble {
-      width: 100%;
-      font-size: 40px;
-      padding: 20px 0;
-      color: #f78da7;
-      display: flex;
-      justify-content: center;
-    }
-
   </style>
 </head>
 <body>
@@ -113,7 +93,10 @@
     <a href="./upload.html">📸 上传留言</a>
   </div>
 
-  <h1>💗 她写给你的话 💗</h1>
-  <div id="gallery" class="gallery"></div>
+  <h1>💗 写给大王的话 💗</h1>
+
+  <div class="gallery" id="gallery"></div>
+
+  <script type="module" src="./scripts/gallery-script.js"></script>
 </body>
 </html>
