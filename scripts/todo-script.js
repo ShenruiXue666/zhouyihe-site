@@ -40,6 +40,31 @@ addTaskBtn.addEventListener("click", async () => {
   }
 });
 
+// 上传并返回图片 URL
+function chooseAndUploadImage() {
+  return new Promise((resolve) => {
+    memoryImageInput.value = "";
+    memoryImageInput.click();
+
+    memoryImageInput.onchange = async () => {
+      const file = memoryImageInput.files[0];
+      if (!file) return resolve("");
+
+      try {
+        const imageName = `${Date.now()}_${file.name}`;
+        const storageRef = ref(storage, `memory-images/${imageName}`);
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+        resolve(url);
+      } catch (err) {
+        console.error("图片上传失败", err);
+        alert("图片上传失败");
+        resolve("");
+      }
+    };
+  });
+}
+
 // 渲染任务列表
 const q = query(collection(db, "todo-list"), orderBy("createdAt", "desc"));
 onSnapshot(q, (snapshot) => {
@@ -59,21 +84,15 @@ onSnapshot(q, (snapshot) => {
     span.textContent = data.text;
     span.addEventListener("click", async () => {
       if (!data.completed) {
-        memoryImageInput.click();
-        memoryImageInput.onchange = async () => {
-          const file = memoryImageInput.files[0];
-          let memoryImageUrl = "";
-          if (file) {
-            const imageName = `${Date.now()}_${file.name}`;
-            const storageRef = ref(storage, `memory-images/${imageName}`);
-            await uploadBytes(storageRef, file);
-            memoryImageUrl = await getDownloadURL(storageRef);
-          }
-          await updateDoc(doc(db, "todo-list", docSnap.id), {
-            completed: true,
-            memoryImageUrl,
-          });
-        };
+        const confirmUpload = confirm("是否上传一张纪念图？点击“取消”则仅完成任务。");
+        let memoryImageUrl = "";
+        if (confirmUpload) {
+          memoryImageUrl = await chooseAndUploadImage();
+        }
+        await updateDoc(doc(db, "todo-list", docSnap.id), {
+          completed: true,
+          memoryImageUrl,
+        });
       } else {
         await updateDoc(doc(db, "todo-list", docSnap.id), {
           completed: false,
@@ -103,7 +122,6 @@ onSnapshot(q, (snapshot) => {
     meta.appendChild(delBtn);
     li.appendChild(meta);
 
-    // 如果有纪念图
     if (data.memoryImageUrl) {
       const img = document.createElement("img");
       img.src = data.memoryImageUrl;
