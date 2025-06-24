@@ -98,6 +98,26 @@ input[type="text"], input[type="file"], textarea {
   padding: 6px 18px 10px;
 }
 
+/* 留言卡片删除按钮样式美化 */
+.card .delete-btn {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background: #f78da7;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  width: 90%;
+}
+
+.card .delete-btn:hover {
+  background: #f45c9c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
 /* 响应式设计：手机适配 */
 @media (max-width: 768px) {
   .upload-box,
