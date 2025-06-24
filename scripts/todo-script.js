@@ -1,78 +1,75 @@
-// todo-script.js
-import { db } from "../firebase.js";
+import { db } from "./firebase.js";
 import {
   collection,
   addDoc,
   getDocs,
-  deleteDoc,
+  onSnapshot,
   updateDoc,
+  deleteDoc,
   doc,
   serverTimestamp,
-  query,
-  orderBy
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-const input = document.getElementById("todoInput");
-const addBtn = document.getElementById("addBtn");
-const list = document.getElementById("todoList");
+// 元素选择
+const taskInput = document.getElementById("taskInput");
+const addTaskBtn = document.getElementById("addTaskBtn");
+const taskList = document.getElementById("taskList");
 
-async function loadTodos() {
-  const q = query(collection(db, "todoList"), orderBy("createdAt", "desc"));
-  const snapshot = await getDocs(q);
-  list.innerHTML = "";
+// 密码提示（可自定义）
+const correctPassword = "tianwanggaidihu"; // 安全词拼音版本
 
+// 添加任务
+addTaskBtn.addEventListener("click", async () => {
+  const text = taskInput.value.trim();
+  if (!text) return alert("请输入一个任务");
+
+  // 弹出密码框
+  const password = prompt("请输入我们的密码：");
+
+  if (password !== correctPassword) {
+    alert(password ? "哎呀，记错啦～再想想？" : "必须输入拼音！");
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, "todo-list"), {
+      text,
+      completed: false,
+      createdAt: serverTimestamp(),
+      password: password, // 发送到数据库中校验
+    });
+    taskInput.value = "";
+  } catch (e) {
+    console.error("添加失败", e);
+    alert("添加失败，请重试！");
+  }
+});
+
+// 渲染任务列表
+onSnapshot(collection(db, "todo-list"), (snapshot) => {
+  taskList.innerHTML = "";
   snapshot.forEach((docSnap) => {
     const data = docSnap.data();
-    const li = createTodoItem(docSnap.id, data.text, data.done, data.createdAt?.toDate());
-    list.appendChild(li);
-  });
-}
+    const li = document.createElement("li");
+    li.textContent = data.text;
+    li.style.textDecoration = data.completed ? "line-through" : "none";
+    li.className = data.completed ? "completed" : "";
 
-function createTodoItem(id, text, done, date) {
-  const li = document.createElement("li");
-  if (done) li.classList.add("done");
-
-  const span = document.createElement("span");
-  span.className = "todo-text";
-  span.textContent = text;
-  span.onclick = async () => {
-    li.classList.toggle("done");
-    await updateDoc(doc(db, "todoList", id), {
-      done: li.classList.contains("done")
+    // 点击切换完成状态
+    li.addEventListener("click", async () => {
+      await updateDoc(doc(db, "todo-list", docSnap.id), {
+        completed: !data.completed,
+      });
     });
-  };
 
-  const dateSpan = document.createElement("span");
-  dateSpan.className = "todo-date";
-  dateSpan.textContent = date ? `添加于 ${date.toLocaleDateString()}` : "";
+    // 右键删除
+    li.addEventListener("contextmenu", async (e) => {
+      e.preventDefault();
+      if (confirm("确定要删除这项任务吗？")) {
+        await deleteDoc(doc(db, "todo-list", docSnap.id));
+      }
+    });
 
-  const del = document.createElement("button");
-  del.className = "delete-btn";
-  del.textContent = "删除";
-  del.onclick = async () => {
-    await deleteDoc(doc(db, "todoList", id));
-    li.remove();
-  };
-
-  li.appendChild(span);
-  li.appendChild(dateSpan);
-  li.appendChild(del);
-  return li;
-}
-
-addBtn.onclick = async () => {
-  const text = input.value.trim();
-  if (!text) return;
-
-  const docRef = await addDoc(collection(db, "todoList"), {
-    text,
-    done: false,
-    createdAt: serverTimestamp()
+    taskList.appendChild(li);
   });
-
-  const li = createTodoItem(docRef.id, text, false, new Date());
-  list.prepend(li);
-  input.value = "";
-};
-
-loadTodos();
+});
