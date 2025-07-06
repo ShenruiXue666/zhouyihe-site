@@ -5,30 +5,52 @@
   <title>恋爱监狱 · 你被关了吗？</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="./styles/style.css" />
-  <script type="module" src="./scripts/prison-script.js"></script>
+  <script type="module" src="./scripts/prison.js"></script>
   <style>
+    body {
+      background: linear-gradient(to bottom, #fff1f5, #fdfbff);
+      font-family: "PingFang SC", sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+      color: #d6336c;
+    }
+
+    .nav {
+      margin-bottom: 30px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #f45c9c;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
     .prison-box {
       background: #fff0f5;
-      padding: 40px 20px;
+      padding: 30px;
       border-radius: 20px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.1);
       max-width: 460px;
       margin: 0 auto;
-      text-align: center;
     }
 
-    .emoji {
+    #emojiIcon {
       font-size: 4em;
+      margin-bottom: 16px;
+    }
+
+    #prisonStatus {
+      font-size: 1.2em;
       margin-bottom: 20px;
     }
 
-    #statusText {
-      font-size: 1.4em;
-      color: #d6336c;
-      margin-bottom: 20px;
-    }
-
-    #escapeBtn {
+    #requestBtn {
       padding: 12px 24px;
       font-size: 1em;
       background: #f78da7;
@@ -39,29 +61,34 @@
       transition: all 0.2s ease;
     }
 
-    #escapeBtn:hover {
+    #requestBtn:hover {
       background: #f45c9c;
     }
 
-    .freedom-animation {
-      font-size: 2em;
+    .free-msg {
+      font-size: 1.6em;
       margin-top: 30px;
       animation: bounce 1s infinite;
+      display: none;
     }
 
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+      50% { transform: translateY(-8px); }
     }
   </style>
 </head>
 <body>
+  <div class="nav">
+    <a href="./index.html">🏠 回到首页</a>
+  </div>
+
   <h1>🏰 恋爱监狱</h1>
   <div class="prison-box">
-    <div class="emoji" id="emoji">⛓️</div>
-    <div id="statusText">加载中...</div>
-    <button id="escapeBtn">🙏 申请出狱</button>
-    <div class="freedom-animation" id="freedomMsg" style="display:none;">🎉 你被放出来啦！快去找她吧！</div>
+    <div id="emojiIcon">⛓️</div>
+    <div id="prisonStatus">加载中...</div>
+    <button id="requestBtn" style="display:none;">🙏 申请出狱</button>
+    <div class="free-msg" id="freedomMsg">🎉 你被放出来啦！快去找她吧！</div>
   </div>
 </body>
 </html>

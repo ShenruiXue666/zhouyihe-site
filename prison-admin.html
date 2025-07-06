@@ -2,44 +2,85 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <title>恋爱监狱 · 管理员入口</title>
+  <title>恋爱监狱 · 管理中心</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="./styles/style.css" />
   <script type="module" src="./scripts/prison-admin.js"></script>
   <style>
+    body {
+      background: linear-gradient(to bottom, #ffeaf1, #fdfbff);
+      font-family: "PingFang SC", sans-serif;
+      padding: 40px 20px;
+      text-align: center;
+      color: #d6336c;
+    }
+
+    .nav {
+      margin-bottom: 30px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #f45c9c;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
     .admin-box {
       background: #fff0f5;
       padding: 30px;
       border-radius: 20px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      max-width: 400px;
+      max-width: 420px;
       margin: 0 auto;
     }
 
-    .status {
+    #currentStatus {
       font-size: 1.2em;
       margin-bottom: 20px;
-      color: #d6336c;
     }
 
     .btns {
       display: flex;
-      gap: 20px;
+      gap: 16px;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     .btns button {
       flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1em;
+      background-color: #f78da7;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btns button:hover {
+      background-color: #f45c9c;
     }
   </style>
 </head>
 <body>
-  <h1>🫅 恋爱监狱 · 管理中心</h1>
+  <div class="nav">
+    <a href="./index.html">🏠 回到首页</a>
+  </div>
+
+  <h1>👑 恋爱监狱 · 管理中心</h1>
+
   <div class="admin-box">
-    <div class="status" id="currentStatus">加载中...</div>
+    <div id="currentStatus">加载中...</div>
     <div class="btns">
-      <button id="lockBtn">🔒 狠心，残酷，冷血，无情的把xpx关起来</button>
-      <button id="freeBtn">🔓 放xpx放出来并且亲亲他</button>
+      <button id="lockBtn">🔒 狠心地把 xpx 关进去</button>
+      <button id="freeBtn">🔓 放他出来，亲亲他</button>
     </div>
   </div>
 </body>
