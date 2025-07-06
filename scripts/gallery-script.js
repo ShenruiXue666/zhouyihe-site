@@ -38,7 +38,7 @@ async function loadMessages() {
 
     // 留言内容（文字气泡）
     const text = document.createElement("p");
-    text.textContent = message || " ";
+    text.textContent = message || "";
     card.appendChild(text);
 
     // 时间戳

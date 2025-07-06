@@ -19,111 +19,141 @@
     body::before {
       content: "";
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       backdrop-filter: brightness(1.05) saturate(1.05) blur(2px);
       z-index: -1;
     }
 
-    .home {
-      max-width: 620px;
+    .container {
+      max-width: 800px;
       margin: 5vh auto;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
       padding: 40px 24px;
-      background: rgba(255, 255, 255, 0.88);
-      border-radius: 24px;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
-      transition: background 0.5s ease;
-    }
-
-    .home h1 {
-      font-size: 2.2em;
-      color: #d6336c;
-      margin-bottom: 20px;
       text-align: center;
     }
 
-    .home p {
+    h1 {
+      font-size: 2em;
+      color: #d6336c;
+      margin-bottom: 10px;
+    }
+
+    p {
       font-size: 1.1em;
       color: #555;
-      line-height: 1.8em;
-      text-align: center;
+      line-height: 1.6em;
+      margin-bottom: 30px;
     }
 
-    .highlight {
+    .card-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: #fff0f5;
+      border-radius: 16px;
+      padding: 16px 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s ease;
       color: #d6336c;
       font-weight: bold;
     }
 
-    .nav-buttons {
-      margin-top: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      align-items: center;
+    .card:hover {
+      transform: translateY(-4px);
+      background: #ffe1ec;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.1);
     }
 
-    .nav-buttons a {
-      text-decoration: none;
-      padding: 12px 20px;
-      background: #f78da7;
-      color: white;
-      border-radius: 14px;
-      font-size: 1em;
-      transition: all 0.25s ease;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-      text-align: center;
-      width: 100%;
-      max-width: 260px;
+    .card-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
     }
 
-    .nav-buttons a:hover {
-      background: #f45c9c;
-      transform: translateY(-1px);
+    .card-sub {
+      font-size: 0.85em;
+      color: #888;
+      font-weight: normal;
     }
 
     .footer-note {
       margin-top: 30px;
       font-size: 0.9em;
       color: #999;
-      text-align: center;
     }
 
     @media (max-width: 480px) {
-      .home {
-        padding: 30px 16px;
-        margin: 4vh auto;
+      .container {
+        margin: 4vh 16px;
+        padding: 30px 20px;
       }
-      .home h1 {
+
+      .card-icon {
+        font-size: 24px;
+      }
+
+      h1 {
         font-size: 1.8em;
       }
-      .home p {
+
+      p {
         font-size: 1em;
-      }
-      .nav-buttons a {
-        font-size: 0.95em;
-        padding: 10px 16px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="home">
+  <div class="container">
     <h1>🎉 Hii伊荷，生日快乐 🎉</h1>
-    <p>
-      这是我偷偷做给你的 <span class="highlight">生日小宇宙</span> 💖<br/>
-      我们的照片、留言、清单，还有...一封未来的密信。
-    </p>
+    <p>这是我偷偷为你打造的 <strong style="color:#d6336c;">生日小宇宙</strong> 💖<br/>
+      留下照片、查看留言、完成小目标，把xpx关起来，还有一封我们300天的信等你开启✨</p>
 
-    <div class="nav-buttons">
-      <a href="./upload.html">📸 上传照片和留言</a>
-      <a href="./gallery.html">💌 看看我们的回忆</a>
-      <a href="./todo.html">📋 一起完成的小清单</a>
-      <a href="./anniversary.html">🕯 一周年密信</a>
+    <div class="card-buttons">
+      <a href="./upload.html" class="card">
+        <div class="card-icon">📷</div>
+        上传照片
+        <div class="card-sub">留下可爱的自拍</div>
+      </a>
+      <a href="./gallery.html" class="card">
+        <div class="card-icon">💌</div>
+        留言回忆
+        <div class="card-sub">看看我给大王写了什么</div>
+      </a>
+      <a href="./todo.html" class="card">
+        <div class="card-icon">📋</div>
+        计划清单
+        <div class="card-sub">我们要一起完成</div>
+      </a>
+      <a href="./prison.html" class="card">
+        <div class="card-icon">🗺</div>
+        恋爱监狱
+        <div class="card-sub">讨厌就关进去</div>
+      </a>
+      <a href="./anniversary.html" class="card">
+        <div class="card-icon">🕯</div>
+        300天密信
+        <div class="card-sub">一封300天可以开的信</div>
+      </a>
     </div>
 
-    <div class="footer-note">本站由xpx亲手打造，盗版必究！！！</div>
+    <div class="footer-note">本站由xpx亲手打造 💖</div>
   </div>
+   <!-- 💗 她的恋爱监狱控制入口 -->
+  <div id="admin-entry" style="position: fixed; bottom: 18px; right: 20px; font-size: 24px; cursor: pointer; opacity: 0.6;">
+    🧸
+  </div>
+  <script>
+    document.getElementById("admin-entry").addEventListener("click", () => {
+      window.location.href = "./prison-admin.html";
+    });
+  </script>
 </body>
 </html>

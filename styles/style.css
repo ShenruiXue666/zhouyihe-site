@@ -97,7 +97,6 @@ input[type="text"], input[type="file"], textarea {
   text-align: right;
   padding: 6px 18px 10px;
 }
-
 /* 留言卡片删除按钮样式美化 */
 .card .delete-btn {
   margin-top: 12px;
@@ -117,6 +116,7 @@ input[type="text"], input[type="file"], textarea {
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
+
 
 /* 响应式设计：手机适配 */
 @media (max-width: 768px) {
