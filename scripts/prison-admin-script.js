@@ -1,37 +1,50 @@
+// scripts/prison-admin.js
 import { db } from "./firebase.js";
 import {
   doc,
-  onSnapshot
+  getDoc,
+  updateDoc,
+  onSnapshot,
+  setDoc
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-const statusText = document.getElementById("statusText");
-const emoji = document.getElementById("emoji");
-const freedomMsg = document.getElementById("freedomMsg");
-const escapeBtn = document.getElementById("escapeBtn");
+const statusText = document.getElementById("currentStatus");
+const lockBtn = document.getElementById("lockBtn");
+const freeBtn = document.getElementById("freeBtn");
+const jailDocRef = doc(db, "status", "prison");
 
-const docRef = doc(db, "prison", "status");
-
-// 实时监听监狱状态
-onSnapshot(docRef, (docSnap) => {
-  if (docSnap.exists()) {
-    const locked = docSnap.data().locked;
-    if (locked) {
-      emoji.textContent = "⛓️";
-      statusText.textContent = "你目前被关起来啦...";
-      escapeBtn.style.display = "inline-block";
-      freedomMsg.style.display = "none";
-    } else {
-      emoji.textContent = "🌈";
-      statusText.textContent = "你现在自由啦！";
-      escapeBtn.style.display = "none";
-      freedomMsg.style.display = "block";
-    }
+function updateUI(data) {
+  const { jailed, requested } = data;
+  if (jailed) {
+    statusText.textContent = requested
+      ? "🔒 他被关着，还申请出狱了 🥺"
+      : "🔒 他现在被关在恋爱监狱里";
   } else {
-    statusText.textContent = "监狱状态未知～";
+    statusText.textContent = "🌈 他现在自由啦～";
+  }
+}
+
+// 实时监听状态
+onSnapshot(jailDocRef, (docSnap) => {
+  if (docSnap.exists()) {
+    updateUI(docSnap.data());
+  } else {
+    setDoc(jailDocRef, { jailed: false, requested: false });
   }
 });
 
-// 点击“申请出狱”按钮，仅展示提示
-escapeBtn.addEventListener("click", () => {
-  alert("你发出了一个可怜的请求，希望她能放你出来🥺");
+// 关起来
+lockBtn.addEventListener("click", async () => {
+  await updateDoc(jailDocRef, {
+    jailed: true,
+    requested: false
+  });
+});
+
+// 放出来
+freeBtn.addEventListener("click", async () => {
+  await updateDoc(jailDocRef, {
+    jailed: false,
+    requested: false
+  });
 });

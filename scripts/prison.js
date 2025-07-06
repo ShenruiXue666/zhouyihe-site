@@ -11,34 +11,39 @@ import {
 const statusText = document.getElementById("prisonStatus");
 const emoji = document.getElementById("emojiIcon");
 const requestBtn = document.getElementById("requestBtn");
+const freedomMsg = document.getElementById("freedomMsg");
+
 const jailDocRef = doc(db, "status", "prison");
 
 function updateUI(data) {
   const { jailed, requested } = data;
   if (jailed) {
-    statusText.textContent = "你被关在恋爱监狱里了 😢";
     emoji.textContent = "🔒";
-    requestBtn.style.display = "block";
+    statusText.textContent = requested
+      ? "你已经申请出狱了，等她同意 🥺"
+      : "你被关在恋爱监狱里了 😢";
+    requestBtn.style.display = "inline-block";
     requestBtn.disabled = requested;
-    requestBtn.textContent = requested ? "已申请出狱...等待她原谅" : "申请出狱";
+    requestBtn.textContent = requested ? "等待中..." : "🙏 申请出狱";
+    freedomMsg.style.display = "none";
   } else {
-    statusText.textContent = "你自由了！她不生气啦 🥰";
-    emoji.textContent = "🚪";
+    emoji.textContent = "🌈";
+    statusText.textContent = "你现在自由啦～她原谅你了 🕊";
     requestBtn.style.display = "none";
+    freedomMsg.style.display = "block";
   }
 }
 
-// 实时监听状态变化
+// 实时监听
 onSnapshot(jailDocRef, (docSnap) => {
   if (docSnap.exists()) {
     updateUI(docSnap.data());
   } else {
-    // 初始化
     setDoc(jailDocRef, { jailed: false, requested: false });
   }
 });
 
-// 申请出狱
+// 申请出狱按钮
 requestBtn.addEventListener("click", async () => {
   await updateDoc(jailDocRef, {
     requested: true,
