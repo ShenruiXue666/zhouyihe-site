@@ -7,80 +7,309 @@
   <link rel="stylesheet" href="./styles/style.css" />
   <script type="module" src="./scripts/todo-script.js"></script>
   <style>
+    /* 专用待办页面样式 */
     body {
-      font-family: "Helvetica Neue", "PingFang SC", sans-serif;
-      background: linear-gradient(to bottom, #fff1f5, #f9f9ff);
-      padding: 40px;
-      color: #444;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      background: 
+        linear-gradient(135deg, #fff1f5 0%, #f9f9ff 50%, #ffeef6 100%),
+        url('./images/kitty8.png');
+      background-blend-mode: overlay;
+      background-repeat: repeat;
+      background-size: 250px;
+      background-attachment: fixed;
+      padding: 2rem;
+      color: var(--text-dark);
       text-align: center;
       position: relative;
       z-index: 1;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
+    /* 动态背景层 */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(214, 51, 108, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(247, 141, 167, 0.08) 0%, transparent 50%);
+      backdrop-filter: brightness(1.05) saturate(1.1);
+      animation: backgroundPulse 25s ease-in-out infinite;
+      z-index: -2;
+    }
+
+    @keyframes backgroundPulse {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+      50% { transform: scale(1.05) rotate(2deg); opacity: 1; }
+    }
+
+    /* 页面容器 */
+    .page-container {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* 导航栏现代化 */
+    .nav {
+      margin-bottom: 3rem;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      animation: slideDown 0.8s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--primary-pink);
+      margin: 0 1rem;
+      font-weight: 600;
+      padding: 0.8rem 1.5rem;
+      border-radius: 20px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      display: inline-block;
+    }
+
+    .nav a::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(247, 141, 167, 0.2), rgba(214, 51, 108, 0.2));
+      border-radius: 20px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    .nav a:hover::before {
+      opacity: 1;
+    }
+
+    .nav a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(214, 51, 108, 0.2);
+    }
+
+    /* 标题增强 */
     h1 {
-      font-size: 2em;
-      color: #d6336c;
-      margin-bottom: 20px;
+      font-size: clamp(2rem, 5vw, 3rem);
+      background: linear-gradient(135deg, #d6336c, #f78da7, #ff9eb5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      animation: titleSlideUp 0.8s ease-out 0.3s both;
+      filter: drop-shadow(0 4px 15px rgba(214, 51, 108, 0.2));
     }
 
+    @keyframes titleSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 输入框区域现代化 */
     .input-box {
-      margin-bottom: 20px;
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      animation: fadeInUp 0.8s ease-out 0.6s both;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .input-container {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     input[type="text"] {
-      padding: 10px;
-      width: 60%;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 1em;
+      flex: 1;
+      min-width: 250px;
+      padding: 1rem 1.5rem;
+      border: 2px solid transparent;
+      border-radius: 25px;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--secondary-pink);
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 0 4px rgba(247, 141, 167, 0.1);
+      transform: translateY(-1px);
+    }
+
+    input[type="text"]::placeholder {
+      color: var(--text-light);
     }
 
     input[type="file"] {
       display: none;
     }
 
+    /* 按钮现代化 */
     button {
-      padding: 10px 15px;
-      margin-left: 10px;
-      font-size: 1em;
-      background: #f78da7;
+      padding: 1rem 2rem;
+      margin: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--secondary-pink), var(--primary-pink));
       border: none;
       color: white;
-      border-radius: 8px;
+      border-radius: 25px;
       cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(214, 51, 108, 0.3);
+    }
+
+    button::before {
+      content: "";
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.6s;
     }
 
     button:hover {
-      background: #f45c9c;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(214, 51, 108, 0.4);
     }
 
+    button:hover::before {
+      left: 100%;
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    /* 待办列表现代化 */
     ul {
       list-style: none;
       padding: 0;
-      max-width: 600px;
-      margin: 0 auto;
+      margin: 2rem 0;
       text-align: left;
     }
 
     li {
-      background: #fff;
-      margin-bottom: 10px;
-      padding: 12px 16px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      margin-bottom: 1rem;
+      padding: 1.5rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
       display: flex;
       flex-direction: column;
-      transition: background 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+      animation: slideInLeft 0.6s ease-out both;
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+
+    li:nth-child(odd) { animation-delay: 0.9s; }
+    li:nth-child(even) { animation-delay: 1.1s; }
+
+    @keyframes slideInLeft {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    li::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(247, 141, 167, 0.1), rgba(214, 51, 108, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    li:hover::before {
+      opacity: 1;
+    }
+
+    li:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 15px 40px rgba(214, 51, 108, 0.15);
+    }
+
+    li.done {
+      background: rgba(200, 200, 200, 0.2);
+      opacity: 0.7;
     }
 
     li.done .todo-text {
       text-decoration: line-through;
-      color: #aaa;
+      color: var(--text-light);
     }
 
     .todo-text {
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      transition: color 0.3s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .todo-text:hover {
+      color: var(--primary-pink);
     }
 
     .todo-meta {
@@ -88,93 +317,225 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
+      position: relative;
+      z-index: 2;
     }
 
     .todo-date {
-      font-size: 0.8em;
-      color: #999;
-      margin-left: 12px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-left: 1rem;
       white-space: nowrap;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      backdrop-filter: blur(5px);
     }
 
     .memory-img {
-      margin-top: 10px;
-      border-radius: 10px;
+      margin-top: 1rem;
+      border-radius: 15px;
       max-width: 100%;
       max-height: 200px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .memory-img:hover {
+      transform: scale(1.02);
     }
 
     .delete-btn {
-      margin-left: 15px;
-      background: #eee;
+      margin-left: 1rem;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
       border: none;
-      padding: 6px 10px;
-      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      border-radius: 15px;
       cursor: pointer;
-      color: #999;
+      color: white;
+      font-weight: 500;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
     }
 
     .delete-btn:hover {
-      background: #ddd;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
     }
 
-    .nav {
-      margin-bottom: 30px;
-    }
-
-    .nav a {
-      text-decoration: none;
-      color: #f45c9c;
-      margin: 0 10px;
-      font-weight: bold;
-    }
-
+    /* 分区标题现代化 */
     .section-header {
-      font-size: 1.2em;
-      margin-top: 30px;
-      color: #888;
+      font-size: 1.4rem;
+      margin: 3rem 0 1.5rem;
+      color: var(--text-medium);
       cursor: pointer;
       user-select: none;
+      padding: 1rem 1.5rem;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section-header::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(247, 141, 167, 0.1), rgba(214, 51, 108, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .section-header:hover::before {
+      opacity: 1;
+    }
+
+    .section-header:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(214, 51, 108, 0.15);
+      color: var(--primary-pink);
     }
 
     .collapsed {
       display: none;
     }
 
-    /* 粒子背景 canvas 层级最低 */
+    /* 粒子背景 canvas 样式 */
     #kittyCanvas {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
       height: 100%;
-      z-index: 0;
+      z-index: -3;
       pointer-events: none;
+      opacity: 0.6;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      .input-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      input[type="text"] {
+        min-width: auto;
+        margin-bottom: 1rem;
+      }
+
+      .nav {
+        padding: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .nav a {
+        margin: 0 0.5rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .todo-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .todo-date {
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0.5rem;
+      }
+
+      .input-box {
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .nav a {
+        display: block;
+        margin: 0.3rem 0;
+        text-align: center;
+      }
+
+      li {
+        padding: 1rem;
+      }
+
+      .section-header {
+        font-size: 1.2rem;
+        padding: 0.8rem 1rem;
+      }
+    }
+
+    /* 空状态样式 */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(20px);
+      border-radius: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      margin: 2rem 0;
+      animation: fadeIn 0.8s ease-out 1.2s both;
+      opacity: 0;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.6;
+    }
+
+    .empty-state h3 {
+      color: var(--text-medium);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .empty-state p {
+      color: var(--text-light);
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
   <canvas id="kittyCanvas"></canvas>
 
-  <div class="nav">
-    <a href="./index.html">🏠 首页</a>
-    <a href="./gallery.html">💌 查看留言</a>
-  </div>
+  <div class="page-container">
+    <nav class="nav">
+      <a href="./index.html">✨ 首页</a>
+      <a href="./gallery.html">💕 查看留言</a>
+    </nav>
 
-  <h1>我们的To Do List ✨</h1>
+    <h1>✅ 我们的To Do List ✨</h1>
 
-  <div class="input-box">
-    <input type="text" id="todoInput" placeholder="想一起做什么...">
-    <button id="addTaskBtn" class="add-button">添加</button>
-  </div>
+    <div class="input-box">
+      <div class="input-container">
+        <input type="text" id="todoInput" placeholder="想一起做什么...">
+        <button id="addTaskBtn" class="add-button">添加任务</button>
+      </div>
+    </div>
 
-  <input type="file" id="memoryImageInput" accept="image/*" />
+    <input type="file" id="memoryImageInput" accept="image/*" />
 
-  <div>
-    <h3 class="section-header" onclick="toggleSection('activeList')">📌 正在进行中</h3>
-    <ul id="activeList"></ul>
+    <div>
+      <h3 class="section-header" onclick="toggleSection('activeList')">📌 正在进行中</h3>
+      <ul id="activeList"></ul>
 
-    <h3 class="section-header" onclick="toggleSection('doneList')">✅ 已完成（点击展开/收起）</h3>
-    <ul id="doneList" class="collapsed"></ul>
+      <h3 class="section-header" onclick="toggleSection('doneList')">✅ 已完成（点击展开/收起）</h3>
+      <ul id="doneList" class="collapsed"></ul>
+    </div>
   </div>
 
   <script>
@@ -182,6 +543,47 @@
       const el = document.getElementById(id);
       el.classList.toggle("collapsed");
     }
+
+    // 平滑滚动到新添加的任务
+    function scrollToNewTask(element) {
+      setTimeout(() => {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 100);
+    }
+
+    // 为新添加的任务项应用动画
+    function animateNewTask(element) {
+      element.style.animation = 'none';
+      element.style.opacity = '0';
+      element.style.transform = 'translateX(-30px)';
+      
+      setTimeout(() => {
+        element.style.animation = 'slideInLeft 0.6s ease-out forwards';
+      }, 50);
+    }
+
+    // 监听任务列表变化
+    const activeList = document.getElementById('activeList');
+    const doneList = document.getElementById('doneList');
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'LI') {
+              animateNewTask(node);
+              scrollToNewTask(node);
+            }
+          });
+        }
+      });
+    });
+
+    observer.observe(activeList, { childList: true });
+    observer.observe(doneList, { childList: true });
   </script>
 
   <!-- Kitty 粒子动画 -->
@@ -214,11 +616,11 @@
     reset() {
       this.x = Math.random() * width;
       this.y = height + Math.random() * 200;
-      this.size = 30 + Math.random() * 20;
-      this.speedY = 0.3 + Math.random() * 0.4;
-      this.opacity = 0.5 + Math.random() * 0.3;
+      this.size = 25 + Math.random() * 15;
+      this.speedY = 0.2 + Math.random() * 0.3;
+      this.opacity = 0.3 + Math.random() * 0.3;
       this.rotation = Math.random() * Math.PI * 2;
-      this.rotationSpeed = (Math.random() - 0.5) * 0.01;
+      this.rotationSpeed = (Math.random() - 0.5) * 0.008;
     }
 
     update() {
@@ -244,7 +646,7 @@
     const img = new Image();
     img.src = src;
     img.onload = () => {
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 3; i++) {
         particles.push(new Kitty(img));
       }
       loaded++;

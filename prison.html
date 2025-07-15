@@ -7,88 +7,575 @@
   <link rel="stylesheet" href="./styles/style.css" />
   <script type="module" src="./scripts/prison.js"></script>
   <style>
+    /* 专用监狱页面样式 */
     body {
-      background: linear-gradient(to bottom, #fff1f5, #fdfbff);
-      font-family: "PingFang SC", sans-serif;
+      background: 
+        linear-gradient(135deg, #2c1810 0%, #3d2317 50%, #4a2c1a 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
       text-align: center;
-      padding: 40px 20px;
+      padding: 2rem 1rem;
       color: #d6336c;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
     }
 
+    /* 监狱背景纹理 */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        repeating-linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.1) 0px,
+          rgba(0, 0, 0, 0.1) 2px,
+          transparent 2px,
+          transparent 20px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.05) 0px,
+          rgba(0, 0, 0, 0.05) 2px,
+          transparent 2px,
+          transparent 20px
+        );
+      z-index: -1;
+    }
+
+    /* 监狱栏杆效果 */
+    .prison-bars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 40px,
+        rgba(139, 69, 19, 0.4) 40px,
+        rgba(139, 69, 19, 0.4) 44px
+      );
+      z-index: -1;
+      animation: barsShadow 10s ease-in-out infinite;
+    }
+
+    @keyframes barsShadow {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.3; }
+    }
+
+    /* 页面容器 */
+    .page-container {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* 导航栏 */
     .nav {
-      margin-bottom: 30px;
+      margin-bottom: 3rem;
+      padding: 1.5rem;
+      background: rgba(139, 69, 19, 0.3);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(139, 69, 19, 0.5);
+      border-radius: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      animation: slideDown 0.8s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .nav a {
       text-decoration: none;
-      color: #f45c9c;
-      margin: 0 10px;
-      font-weight: bold;
-    }
-
-    h1 {
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-
-    .prison-box {
-      background: #fff0f5;
-      padding: 30px;
+      color: #fca5a5;
+      margin: 0 1rem;
+      font-weight: 600;
+      padding: 0.8rem 1.5rem;
       border-radius: 20px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      max-width: 460px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      display: inline-block;
+      background: rgba(139, 69, 19, 0.2);
+      border: 1px solid rgba(139, 69, 19, 0.4);
+    }
+
+    .nav a:hover {
+      background: rgba(139, 69, 19, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      color: #fff;
+    }
+
+    /* 标题增强 */
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #8b4513, #cd853f, #daa520);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 3rem;
+      animation: titleGlow 3s ease-in-out infinite alternate;
+      text-shadow: 0 4px 20px rgba(139, 69, 19, 0.5);
+      position: relative;
+    }
+
+    h1::before {
+      content: "🏰";
+      position: absolute;
+      left: -4rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3rem;
+      animation: castleFloat 4s ease-in-out infinite;
+    }
+
+    h1::after {
+      content: "⛓️";
+      position: absolute;
+      right: -4rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3rem;
+      animation: chainSwing 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes titleGlow {
+      0% { filter: drop-shadow(0 0 10px rgba(139, 69, 19, 0.3)); }
+      100% { filter: drop-shadow(0 0 30px rgba(139, 69, 19, 0.6)); }
+    }
+
+    @keyframes castleFloat {
+      0%, 100% { transform: translateY(-50%) rotate(0deg); }
+      50% { transform: translateY(-60%) rotate(5deg); }
+    }
+
+    @keyframes chainSwing {
+      0% { transform: translateY(-50%) rotate(-10deg); }
+      100% { transform: translateY(-50%) rotate(10deg); }
+    }
+
+    /* 监狱容器 */
+    .prison-box {
+      background: 
+        linear-gradient(135deg, 
+          rgba(139, 69, 19, 0.2) 0%, 
+          rgba(160, 82, 45, 0.15) 50%, 
+          rgba(139, 69, 19, 0.1) 100%
+        );
+      backdrop-filter: blur(20px);
+      border: 3px solid rgba(139, 69, 19, 0.4);
+      padding: 3rem 2rem;
+      border-radius: 30px;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      max-width: 500px;
       margin: 0 auto;
+      position: relative;
+      animation: prisonSlideIn 1s ease-out 0.5s both;
+      transform: translateY(50px);
+      opacity: 0;
     }
 
+    @keyframes prisonSlideIn {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .prison-box::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      background: 
+        repeating-linear-gradient(
+          45deg,
+          rgba(139, 69, 19, 0.1) 0px,
+          rgba(139, 69, 19, 0.1) 10px,
+          transparent 10px,
+          transparent 20px
+        );
+      border-radius: 35px;
+      z-index: -1;
+      animation: prisonGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes prisonGlow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    /* 状态图标和动画 */
     #emojiIcon {
-      font-size: 4em;
-      margin-bottom: 16px;
+      font-size: 5rem;
+      margin-bottom: 2rem;
+      display: block;
+      animation: iconBounce 2s ease-in-out infinite;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
     }
 
+    @keyframes iconBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      25% { transform: translateY(-10px) scale(1.05); }
+      75% { transform: translateY(-5px) scale(0.95); }
+    }
+
+    #emojiIcon.imprisoned {
+      animation: shake 0.5s ease-in-out infinite;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    #emojiIcon.free {
+      animation: celebration 2s ease-in-out infinite;
+    }
+
+    @keyframes celebration {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(10deg) scale(1.1); }
+      50% { transform: rotate(-5deg) scale(1.05); }
+      75% { transform: rotate(5deg) scale(1.1); }
+    }
+
+    /* 状态文本 */
     #prisonStatus {
-      font-size: 1.2em;
-      margin-bottom: 20px;
+      font-size: 1.4rem;
+      margin-bottom: 2rem;
+      font-weight: 600;
+      line-height: 1.6;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: statusPulse 3s ease-in-out infinite;
     }
 
+    @keyframes statusPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(214, 51, 108, 0.2); }
+      50% { box-shadow: 0 0 30px rgba(214, 51, 108, 0.4); }
+    }
+
+    .status-imprisoned {
+      color: #ff6b6b !important;
+      background: rgba(255, 107, 107, 0.1) !important;
+      border-color: rgba(255, 107, 107, 0.3) !important;
+    }
+
+    .status-free {
+      color: #4ecdc4 !important;
+      background: rgba(78, 205, 196, 0.1) !important;
+      border-color: rgba(78, 205, 196, 0.3) !important;
+    }
+
+    /* 申请按钮 */
     #requestBtn {
-      padding: 12px 24px;
-      font-size: 1em;
-      background: #f78da7;
+      padding: 1.2rem 2.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
       color: white;
       border: none;
-      border-radius: 12px;
+      border-radius: 25px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+      animation: buttonGlow 3s ease-in-out infinite;
+    }
+
+    #requestBtn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.6s;
     }
 
     #requestBtn:hover {
-      background: #f45c9c;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
     }
 
+    #requestBtn:hover::before {
+      left: 100%;
+    }
+
+    #requestBtn:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    @keyframes buttonGlow {
+      0%, 100% { box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4); }
+      50% { box-shadow: 0 10px 30px rgba(255, 107, 107, 0.6); }
+    }
+
+    /* 自由消息 */
     .free-msg {
-      font-size: 1.6em;
-      margin-top: 30px;
-      animation: bounce 1s infinite;
+      font-size: 1.8rem;
+      margin-top: 2rem;
+      animation: freedomCelebration 2s ease-in-out infinite;
       display: none;
+      background: linear-gradient(135deg, #4ecdc4, #45b7b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      filter: drop-shadow(0 4px 15px rgba(78, 205, 196, 0.3));
     }
 
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+    @keyframes freedomCelebration {
+      0%, 100% { transform: translateY(0) scale(1); }
+      25% { transform: translateY(-10px) scale(1.05); }
+      50% { transform: translateY(-5px) scale(1.1); }
+      75% { transform: translateY(-8px) scale(1.02); }
+    }
+
+    /* 粒子效果 */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .particle {
+      position: absolute;
+      font-size: 1.5rem;
+      opacity: 0.7;
+      animation: particleFloat 8s linear infinite;
+    }
+
+    @keyframes particleFloat {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.7;
+      }
+      90% {
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+
+      h1::before,
+      h1::after {
+        display: none;
+      }
+
+      .prison-box {
+        padding: 2rem 1.5rem;
+        margin: 0 1rem;
+      }
+
+      .nav {
+        padding: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .nav a {
+        margin: 0 0.5rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      #emojiIcon {
+        font-size: 4rem;
+      }
+
+      #prisonStatus {
+        font-size: 1.2rem;
+        padding: 1rem;
+      }
+
+      #requestBtn {
+        font-size: 1rem;
+        padding: 1rem 2rem;
+      }
+
+      .free-msg {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav a {
+        display: block;
+        margin: 0.3rem 0;
+        text-align: center;
+      }
+
+      .prison-box {
+        padding: 1.5rem 1rem;
+        margin: 0 0.5rem;
+      }
+    }
+
+    /* 加载状态 */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s linear infinite;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <div class="nav">
-    <a href="./index.html">🏠 回到首页</a>
+  <!-- 监狱栏杆 -->
+  <div class="prison-bars"></div>
+  
+  <!-- 粒子效果 -->
+  <div class="particles" id="particles"></div>
+
+  <!-- 页面容器 -->
+  <div class="page-container">
+    <nav class="nav">
+      <a href="./index.html">✨ 回到首页</a>
+      <a href="./gallery.html">💕 查看留言</a>
+    </nav>
+
+    <h1>恋爱监狱</h1>
+    
+    <div class="prison-box">
+      <div id="emojiIcon">⛓️</div>
+      <div id="prisonStatus">正在检查监禁状态...</div>
+      <button id="requestBtn" style="display:none;">🙏 申请出狱</button>
+      <div class="free-msg" id="freedomMsg">🎉 你被放出来啦！快去找她吧！</div>
+    </div>
   </div>
 
-  <h1>🏰 恋爱监狱</h1>
-  <div class="prison-box">
-    <div id="emojiIcon">⛓️</div>
-    <div id="prisonStatus">加载中...</div>
-    <button id="requestBtn" style="display:none;">🙏 申请出狱</button>
-    <div class="free-msg" id="freedomMsg">🎉 你被放出来啦！快去找她吧！</div>
-  </div>
+  <script>
+    // 创建监狱粒子效果
+    function createParticles() {
+      const particles = ['⛓️', '🔒', '🗝️', '💔', '😢', '🚪'];
+      const particlesContainer = document.getElementById('particles');
+      
+      function createParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.innerHTML = particles[Math.floor(Math.random() * particles.length)];
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
+        particle.style.animationDelay = Math.random() * 2 + 's';
+        
+        particlesContainer.appendChild(particle);
+        
+        setTimeout(() => {
+          particle.remove();
+        }, 10000);
+      }
+
+      // 创建初始粒子
+      for (let i = 0; i < 3; i++) {
+        setTimeout(createParticle, i * 1000);
+      }
+
+      // 定期创建新粒子
+      setInterval(createParticle, 3000);
+    }
+
+    // 更新状态显示
+    function updatePrisonStatus(isPrisoned, message) {
+      const icon = document.getElementById('emojiIcon');
+      const status = document.getElementById('prisonStatus');
+      const button = document.getElementById('requestBtn');
+      const freeMsg = document.getElementById('freedomMsg');
+
+      // 清除之前的状态类
+      icon.className = '';
+      status.className = '';
+
+      if (isPrisoned) {
+        icon.textContent = '⛓️';
+        icon.className = 'imprisoned';
+        status.className = 'status-imprisoned';
+        status.textContent = message || '你因为太可爱被关进监狱了！😤';
+        button.style.display = 'block';
+        freeMsg.style.display = 'none';
+      } else {
+        icon.textContent = '🕊️';
+        icon.className = 'free';
+        status.className = 'status-free';
+        status.textContent = message || '你是自由的！';
+        button.style.display = 'none';
+        freeMsg.style.display = 'block';
+      }
+    }
+
+    // 申请出狱动画
+    function animateRequest() {
+      const button = document.getElementById('requestBtn');
+      const originalText = button.textContent;
+      
+      button.innerHTML = '<span class="loading"></span>申请中...';
+      button.disabled = true;
+      
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.disabled = false;
+      }, 3000);
+    }
+
+    // 监听申请按钮
+    document.getElementById('requestBtn').addEventListener('click', animateRequest);
+
+    // 初始化
+    createParticles();
+
+    // 模拟状态检查（实际项目中会连接到Firebase）
+    setTimeout(() => {
+      updatePrisonStatus(true, '你因为太可爱被关进监狱了！😤');
+    }, 1000);
+  </script>
 </body>
 </html>

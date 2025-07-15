@@ -3,117 +3,543 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>300天密信</title>
+  <title>300天密信 · 时光印记</title>
   <style>
-    body {
-      font-family: "PingFang SC", sans-serif;
-      background: linear-gradient(to bottom, #fff1f5, #f9f9ff);
+    /* 重置和基础样式 */
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3), transparent),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3), transparent),
+        linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      color: white;
+    }
+
+    /* 星空背景 */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* 流星动画 */
+    .shooting-star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: linear-gradient(45deg, #fff, transparent);
+      border-radius: 50%;
+      animation: shoot 3s linear infinite;
+    }
+
+    @keyframes shoot {
+      0% {
+        transform: translateX(-100px) translateY(100px);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(300px) translateY(-300px);
+        opacity: 0;
+      }
+    }
+
+    /* 导航栏 */
+    .nav {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      display: flex;
+      gap: 1rem;
+      z-index: 100;
+      animation: fadeInDown 1s ease-out;
+    }
+
+    .nav a {
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .nav a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 主容器 */
+    .container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
+      position: relative;
+      z-index: 10;
+      animation: fadeIn 0.8s ease-out;
     }
 
-    .nav {
-      position: absolute;
-      top: 20px;
-      left: 20px;
+    /* 标题 */
+    .title {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #ff6b9d, #c44569, #f8b500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: fadeInUp 0.6s ease-out 0.2s both;
+      filter: drop-shadow(0 4px 20px rgba(255, 107, 157, 0.3));
+    }
+
+    /* 封印容器 */
+    .seal-container {
+      position: relative;
       display: flex;
-      gap: 15px;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeInUp 0.6s ease-out 0.4s both;
     }
 
-    .nav a {
-      text-decoration: none;
-      background: #f78da7;
-      color: white;
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-size: 0.95em;
-    }
-
-    #waxSeal {
-      cursor: pointer;
-      width: 140px;
-      height: 140px;
-      background: radial-gradient(#a51c30, #720d1b);
+    /* 蜡封 */
+    .wax-seal {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      background: 
+        radial-gradient(circle at 30% 30%, #dc2626, #991b1b),
+        radial-gradient(circle at 70% 70%, #7f1d1d, #450a0a);
       border-radius: 50%;
-      box-shadow: 0 0 0 10px #fff0f5, 0 4px 12px rgba(0,0,0,0.2);
+      cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: white;
-      font-size: 1.5em;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-      animation: pulse 2s infinite;
+      color: #fca5a5;
+      font-size: 2.5rem;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      box-shadow: 
+        0 0 0 8px rgba(220, 38, 38, 0.3),
+        0 0 0 16px rgba(220, 38, 38, 0.1),
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        inset 0 -10px 20px rgba(0, 0, 0, 0.3);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      animation: sealPulse 3s ease-in-out infinite;
     }
 
-    #waxSeal:hover {
-      transform: scale(1.05);
+    .wax-seal::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.3), transparent 50%);
+      top: 0;
+      left: 0;
     }
 
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 10px #fff0f5, 0 4px 12px rgba(0,0,0,0.2); }
-      50% { box-shadow: 0 0 0 20px #ffe4ec44, 0 8px 16px rgba(0,0,0,0.3); }
-      100% { box-shadow: 0 0 0 10px #fff0f5, 0 4px 12px rgba(0,0,0,0.2); }
+    .wax-seal::after {
+      content: "🔒";
+      position: absolute;
+      font-size: 3rem;
+      animation: lockFloat 2s ease-in-out infinite alternate;
     }
 
-    #modal {
-      display: none;
+    @keyframes sealPulse {
+      0%, 100% { 
+        box-shadow: 
+          0 0 0 8px rgba(220, 38, 38, 0.3),
+          0 0 0 16px rgba(220, 38, 38, 0.1),
+          0 20px 40px rgba(0, 0, 0, 0.4),
+          inset 0 -10px 20px rgba(0, 0, 0, 0.3);
+      }
+      50% { 
+        box-shadow: 
+          0 0 0 12px rgba(220, 38, 38, 0.4),
+          0 0 0 24px rgba(220, 38, 38, 0.2),
+          0 25px 50px rgba(0, 0, 0, 0.5),
+          inset 0 -10px 20px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    @keyframes lockFloat {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-8px); }
+    }
+
+    .wax-seal:hover {
+      transform: scale(1.05) translateY(-5px);
+      box-shadow: 
+        0 0 0 12px rgba(220, 38, 38, 0.4),
+        0 0 0 24px rgba(220, 38, 38, 0.2),
+        0 30px 60px rgba(0, 0, 0, 0.6),
+        inset 0 -10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 倒计时 */
+    .countdown {
+      margin-top: 3rem;
+      text-align: center;
+      animation: fadeInUp 0.6s ease-out 0.6s both;
+    }
+
+    .countdown-title {
+      font-size: 1.2rem;
+      color: #fca5a5;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+
+    .countdown-display {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .time-unit {
+      display: flex;
       flex-direction: column;
       align-items: center;
-      max-width: 600px;
-      background: #fff;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      position: absolute;
-      top: 10%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 1rem;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      min-width: 80px;
+    }
+
+    .time-value {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ff6b9d, #c44569);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .time-label {
+      font-size: 0.8rem;
+      color: #fca5a5;
+      margin-top: 0.5rem;
+    }
+
+    /* 窥视按钮 */
+    .peek-button {
+      margin-top: 2rem;
+      padding: 1rem 2rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 25px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      animation: fadeInUp 0.6s ease-out 0.8s both;
+    }
+
+    .peek-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 模态框 */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
       animation: fadeIn 0.5s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: 
+        linear-gradient(135deg, 
+          rgba(255, 255, 255, 0.1), 
+          rgba(255, 255, 255, 0.05)
+        );
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 25px;
+      padding: 3rem;
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      animation: modalSlideIn 0.5s ease-out;
     }
 
-    #modal p {
-      font-size: 1.2em;
-      line-height: 1.8em;
-      color: #555;
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8) translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) translateY(0);
+      }
+    }
+
+    .modal-content h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #ff6b9d, #c44569);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .modal-content p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 2rem;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .modal-button {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      font-weight: 500;
+    }
+
+    .modal-button.primary {
+      background: linear-gradient(135deg, #ff6b9d, #c44569);
+      color: white;
+    }
+
+    .modal-button.secondary {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 密码输入 */
+    .secret-input {
+      width: 100%;
+      max-width: 300px;
+      padding: 1rem;
+      margin: 1rem 0;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      color: white;
+      font-size: 1rem;
       text-align: center;
     }
 
-    #modal button {
-      margin-top: 20px;
-      background: #f78da7;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 16px;
-      cursor: pointer;
+    .secret-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .secret-input:focus {
+      outline: none;
+      border-color: #ff6b9d;
+      box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.2);
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .nav {
+        top: 1rem;
+        left: 1rem;
+        gap: 0.5rem;
+      }
+
+      .nav a {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+      }
+
+      .wax-seal {
+        width: 150px;
+        height: 150px;
+        font-size: 2rem;
+      }
+
+      .wax-seal::after {
+        font-size: 2.5rem;
+      }
+
+      .countdown-display {
+        gap: 1rem;
+      }
+
+      .time-unit {
+        padding: 0.8rem;
+        min-width: 60px;
+      }
+
+      .time-value {
+        font-size: 1.5rem;
+      }
+
+      .modal-content {
+        padding: 2rem;
+        margin: 1rem;
+      }
+    }
+
+    /* 动画关键帧 */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 破碎动画 */
+    .seal-breaking {
+      animation: sealBreak 2s ease-out forwards;
+    }
+
+    @keyframes sealBreak {
+      0% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.1) rotate(5deg); }
+      50% { transform: scale(1.05) rotate(-3deg); }
+      75% { transform: scale(1.2) rotate(8deg); opacity: 0.8; }
+      100% { transform: scale(1.5) rotate(15deg); opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <div class="nav">
-    <a href="./index.html">首页</a>
-    <a href="./gallery.html">留言阅览</a>
+  <!-- 星空背景 -->
+  <div class="stars" id="stars"></div>
+
+  <!-- 导航栏 -->
+  <nav class="nav">
+    <a href="./index.html">✨ 首页</a>
+    <a href="./gallery.html">💕 留言</a>
+  </nav>
+
+  <!-- 主容器 -->
+  <div class="container">
+    <h1 class="title">✨ 300天密信 ✨</h1>
+    
+    <div class="seal-container">
+      <div class="wax-seal" id="waxSeal" onclick="openModal()">
+        密信
+      </div>
+      
+      <div class="countdown">
+        <div class="countdown-title">距离2025年11月29日还有</div>
+        <div class="countdown-display" id="countdown">
+          <div class="time-unit">
+            <div class="time-value" id="days">---</div>
+            <div class="time-label">天</div>
+          </div>
+          <div class="time-unit">
+            <div class="time-value" id="hours">--</div>
+            <div class="time-label">时</div>
+          </div>
+          <div class="time-unit">
+            <div class="time-value" id="minutes">--</div>
+            <div class="time-label">分</div>
+          </div>
+          <div class="time-unit">
+            <div class="time-value" id="seconds">--</div>
+            <div class="time-label">秒</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="peek-button" onclick="tryPeek()">
+        👀 忍不住想偷看？
+      </button>
+    </div>
   </div>
 
-  <div id="waxSeal" onclick="openModal()">密信缩印</div>
-
-  <div style="margin-top: 20px;">
-    <button onclick="tryPeek()" style="background:#888; color:white; padding:10px 20px; border:none; border-radius:10px; cursor:pointer;">🙈 想探头看看</button>
-  </div>
-
-  <div id="modal">
-    <p id="modalText">加载中...</p>
-    <input type="text" id="secretCode" placeholder="输入我们的安全词" style="display:none; padding:8px; margin-top:10px; width:100%; max-width:300px;">
-    <button id="secretSubmit" onclick="validateCode()" style="display:none;">提交</button>
-    <button onclick="closeModal()">关闭</button>
+  <!-- 模态框 -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h3 id="modalTitle">加载中...</h3>
+      <p id="modalText"></p>
+      <input type="text" id="secretCode" class="secret-input" placeholder="输入我们的安全词" style="display:none;">
+      <div class="modal-buttons" id="modalButtons">
+        <button class="modal-button secondary" onclick="closeModal()">关闭</button>
+      </div>
+    </div>
   </div>
 
   <script type="module">
@@ -121,56 +547,159 @@
     window.openModal = openModal;
     window.closeModal = closeModal;
 
+    // 创建星空背景
+    function createStars() {
+      const starsContainer = document.getElementById('stars');
+      
+      // 创建静态星星
+      for (let i = 0; i < 200; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        starsContainer.appendChild(star);
+      }
+
+      // 创建流星
+      function createShootingStar() {
+        const shootingStar = document.createElement('div');
+        shootingStar.className = 'shooting-star';
+        shootingStar.style.left = Math.random() * 100 + '%';
+        shootingStar.style.top = Math.random() * 100 + '%';
+        shootingStar.style.animationDelay = Math.random() * 2 + 's';
+        starsContainer.appendChild(shootingStar);
+
+        setTimeout(() => {
+          shootingStar.remove();
+        }, 3000);
+      }
+
+      // 定期创建流星
+      setInterval(createShootingStar, 5000);
+    }
+
+    // 倒计时功能
+    function updateCountdown() {
+      const targetDate = new Date('2025-11-29T00:00:00').getTime();
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        document.getElementById('days').textContent = days.toString().padStart(3, '0');
+        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+      }
+    }
+
+    // 窥视功能
     let peekStage = 0;
     window.tryPeek = function() {
       const modal = document.getElementById("modal");
+      const modalTitle = document.getElementById("modalTitle");
       const modalText = document.getElementById("modalText");
-      const input = document.getElementById("secretCode");
-      const submit = document.getElementById("secretSubmit");
-      modal.style.display = "flex";
+      const modalButtons = document.getElementById("modalButtons");
+      const secretInput = document.getElementById("secretCode");
+      
+      modal.style.display = "block";
 
       if (peekStage === 0) {
-        modalText.innerHTML = `🧐 你想偷偷看我们的信？<br><br>现在打开就没有惊喜啦...<br><br>
-        <button onclick="confirmPeek(false)" style="background:#888;">我想想...</button>
-        <button onclick="confirmPeek(true)" style="background:#d6336c;">真的要偷看！</button>`;
-        input.style.display = 'none';
-        submit.style.display = 'none';
+        modalTitle.textContent = "🤔 真的要偷看吗？";
+        modalText.innerHTML = `现在打开就没有惊喜感啦...<br><br>
+        不过如果真的想看的话...也不是不可以 😏`;
+        
+        modalButtons.innerHTML = `
+          <button class="modal-button secondary" onclick="confirmPeek(false)">我再等等</button>
+          <button class="modal-button primary" onclick="confirmPeek(true)">真的要看！</button>
+          <button class="modal-button secondary" onclick="closeModal()">关闭</button>
+        `;
+        
+        secretInput.style.display = 'none';
         peekStage = 1;
       }
     }
 
     window.confirmPeek = function(wantsToPeek) {
+      const modalTitle = document.getElementById("modalTitle");
       const modalText = document.getElementById("modalText");
-      const input = document.getElementById("secretCode");
-      const submit = document.getElementById("secretSubmit");
+      const modalButtons = document.getElementById("modalButtons");
+      const secretInput = document.getElementById("secretCode");
 
       if (!wantsToPeek) {
-        modalText.innerHTML = "👏 做得好！再等等，就快到2026啦💖";
-        input.style.display = 'none';
-        submit.style.display = 'none';
+        modalTitle.textContent = "😊 很棒的选择！";
+        modalText.innerHTML = "耐心等待会让惊喜更加珍贵 💖<br><br>让我们一起等到2025年11月29日吧！";
+        modalButtons.innerHTML = `
+          <button class="modal-button primary" onclick="closeModal()">好的</button>
+        `;
+        secretInput.style.display = 'none';
         return;
       }
 
-      modalText.innerHTML = `🤫 只有说出我们的安全词，才能继续……`;
-      input.style.display = 'block';
-      submit.style.display = 'inline-block';
+      modalTitle.textContent = "🔐 验证身份";
+      modalText.innerHTML = "只有说出我们的安全词，才能继续...";
+      modalButtons.innerHTML = `
+        <button class="modal-button primary" onclick="validateCode()">验证</button>
+        <button class="modal-button secondary" onclick="closeModal()">放弃</button>
+      `;
+      secretInput.style.display = 'block';
+      secretInput.focus();
     }
 
     window.validateCode = function() {
       const input = document.getElementById("secretCode").value.trim();
+      const modalTitle = document.getElementById("modalTitle");
       const modalText = document.getElementById("modalText");
+      const modalButtons = document.getElementById("modalButtons");
+      const secretInput = document.getElementById("secretCode");
 
       if (input === "天王盖地虎") {
-        modalText.innerHTML = `🤭 你居然还记得！不过……<br><br>
-        📜 我们说好的300天才一起打开～现在可不能作弊哟～<br><br>
-        💌 等待的过程才最甜蜜。`;
+        modalTitle.textContent = "🎉 验证成功！";
+        modalText.innerHTML = `哇！你居然还记得我们的暗号！<br><br>
+        不过...这封信是我们说好要到2025年11月29日一起打开的呀 😊<br><br>
+        现在偷看就没有仪式感了～<br><br>
+        让我们一起期待那个特殊的时刻吧！✨`;
+        modalButtons.innerHTML = `
+          <button class="modal-button primary" onclick="closeModal()">好吧，我等等</button>
+        `;
+        secretInput.style.display = 'none';
       } else {
-        modalText.innerHTML = `❌ 哎呀，居然忘了我们的安全词！<br><br>
-        要不要再想一想？🧠<br><br>
-        提示：五个字，江湖暗号🐯<br><br>
-        <button onclick="tryPeek()" style="margin-top:12px;">重新尝试</button>`;
+        modalTitle.textContent = "❌ 验证失败";
+        modalText.innerHTML = `暗号不对哦～<br><br>
+        提示：五个字的江湖暗号 🐯<br><br>
+        想想我们第一次说暗号的时候～`;
+        modalButtons.innerHTML = `
+          <button class="modal-button primary" onclick="validateCode()">重新验证</button>
+          <button class="modal-button secondary" onclick="closeModal()">放弃</button>
+        `;
+        secretInput.value = '';
+        secretInput.focus();
       }
     }
+
+    window.closeModal = function() {
+      const modal = document.getElementById("modal");
+      modal.style.display = "none";
+      peekStage = 0;
+    }
+
+    // 支持回车键提交
+    document.getElementById('secretCode').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        validateCode();
+      }
+    });
+
+    // 初始化
+    createStars();
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
   </script>
 </body>
 </html>

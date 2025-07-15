@@ -3,157 +3,523 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Happy Birthday, Yihe!</title>
+  <title>我们的小宇宙 💖</title>
   <link rel="stylesheet" href="./styles/style.css" />
   <style>
+    /* 专用主页样式 */
     html, body {
       margin: 0;
       padding: 0;
-      font-family: "PingFang SC", sans-serif;
-      background-image: url('./images/kitty2.jpg');
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      background: 
+        linear-gradient(135deg, #fff1f5 0%, #f9f9ff 50%, #ffeef6 100%),
+        url('./images/kitty2.jpg');
+      background-blend-mode: overlay;
       background-repeat: repeat;
-      background-size: 250px;
+      background-size: 200px;
       background-attachment: fixed;
+      overflow-x: hidden;
     }
 
+    /* 动态背景遮罩 */
     body::before {
       content: "";
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      backdrop-filter: brightness(1.05) saturate(1.05) blur(2px);
+      background: 
+        radial-gradient(circle at 30% 70%, rgba(214, 51, 108, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 70% 30%, rgba(247, 141, 167, 0.15) 0%, transparent 50%);
+      backdrop-filter: brightness(1.1) saturate(1.2) blur(1px);
+      animation: backgroundFloat 15s ease-in-out infinite;
       z-index: -1;
     }
 
-    .container {
-      max-width: 800px;
-      margin: 5vh auto;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-      padding: 40px 24px;
+    @keyframes backgroundFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(1deg); }
+    }
+
+    /* 页面加载动画 */
+    .page-loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #fff1f5, #f9f9ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: fadeOut 0.8s ease 2s forwards;
+    }
+
+    .loader-content {
       text-align: center;
+      animation: loaderPulse 1.5s ease-in-out infinite;
     }
 
+    .loader-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes loaderPulse {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    /* 主容器增强 */
+    .container {
+      max-width: 850px;
+      margin: 5vh auto;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 32px;
+      box-shadow: 
+        0 20px 60px rgba(0,0,0,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+      padding: 3rem 2rem;
+      text-align: center;
+      position: relative;
+      animation: containerSlideIn 1s ease-out 2.2s both;
+      transform: translateY(30px);
+      opacity: 0;
+    }
+
+    @keyframes containerSlideIn {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* 闪亮装饰 */
+    .container::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.1) 100%);
+      border-radius: 32px;
+      opacity: 0;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0; transform: translateX(-100%); }
+      50% { opacity: 1; transform: translateX(100%); }
+    }
+
+    /* 标题增强 */
     h1 {
-      font-size: 2em;
-      color: #d6336c;
-      margin-bottom: 10px;
+      font-size: clamp(2rem, 5vw, 3rem);
+      background: linear-gradient(135deg, #d6336c, #f78da7, #ff9eb5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      position: relative;
+      animation: titleFloat 3s ease-in-out infinite;
     }
 
-    p {
-      font-size: 1.1em;
-      color: #555;
-      line-height: 1.6em;
-      margin-bottom: 30px;
+    @keyframes titleFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
     }
 
+    /* 副标题样式 */
+    .subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: var(--text-medium);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      animation: fadeInUp 0.8s ease-out 2.5s both;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 卡片网格增强 */
     .card-buttons {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 16px;
-      margin-top: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
     }
 
     .card {
-      background: #fff0f5;
-      border-radius: 16px;
-      padding: 16px 12px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 24px;
+      padding: 1.5rem 1rem;
       text-align: center;
       text-decoration: none;
-      transition: all 0.2s ease;
-      color: #d6336c;
-      font-weight: bold;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      color: var(--primary-pink);
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+      animation: cardSlideIn 0.6s ease-out both;
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+
+    .card:nth-child(1) { animation-delay: 2.8s; }
+    .card:nth-child(2) { animation-delay: 3.0s; }
+    .card:nth-child(3) { animation-delay: 3.2s; }
+    .card:nth-child(4) { animation-delay: 3.4s; }
+    .card:nth-child(5) { animation-delay: 3.6s; }
+
+    @keyframes cardSlideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, rgba(247, 141, 167, 0.1), rgba(214, 51, 108, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 24px;
+    }
+
+    .card:hover::before {
+      opacity: 1;
     }
 
     .card:hover {
-      transform: translateY(-4px);
-      background: #ffe1ec;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 
+        0 20px 60px rgba(214, 51, 108, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.5);
+      color: var(--primary-pink);
     }
 
     .card-icon {
-      font-size: 28px;
-      margin-bottom: 8px;
+      font-size: 2.2rem;
+      margin-bottom: 0.8rem;
+      display: block;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: drop-shadow(0 2px 8px rgba(214, 51, 108, 0.2));
+    }
+
+    .card:hover .card-icon {
+      transform: scale(1.2) rotate(10deg);
+      filter: drop-shadow(0 4px 15px rgba(214, 51, 108, 0.4));
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--primary-pink);
     }
 
     .card-sub {
-      font-size: 0.85em;
-      color: #888;
-      font-weight: normal;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      font-weight: 400;
+      transition: color 0.3s ease;
     }
 
+    .card:hover .card-sub {
+      color: var(--text-medium);
+    }
+
+    /* 底部注释 */
     .footer-note {
-      margin-top: 30px;
-      font-size: 0.9em;
-      color: #999;
+      margin-top: 2.5rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      animation: fadeIn 0.8s ease-out 4s both;
+      opacity: 0;
+      position: relative;
+    }
+
+    .footer-note::before {
+      content: "💖";
+      display: inline-block;
+      margin-right: 0.5rem;
+      animation: heartBeat 2s ease-in-out infinite;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    /* 管理员入口增强 */
+    #admin-entry {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      font-size: 2rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: adminFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes adminFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    #admin-entry:hover {
+      opacity: 1;
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 10px 30px rgba(214, 51, 108, 0.3);
+    }
+
+    /* 浮动粒子背景 */
+    .floating-elements {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .floating-heart {
+      position: absolute;
+      opacity: 0.6;
+      animation: floatUp 8s linear infinite;
+      font-size: 1.5rem;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+      }
+      90% {
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* 响应式优化 */
+    @media (max-width: 768px) {
+      .container {
+        margin: 3vh 1rem;
+        padding: 2rem 1.5rem;
+      }
+
+      .card-buttons {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1rem;
+      }
+
+      #admin-entry {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+      }
     }
 
     @media (max-width: 480px) {
       .container {
-        margin: 4vh 16px;
-        padding: 30px 20px;
+        margin: 2vh 0.8rem;
+        padding: 1.5rem 1rem;
       }
 
-      .card-icon {
-        font-size: 24px;
-      }
-
-      h1 {
-        font-size: 1.8em;
-      }
-
-      p {
-        font-size: 1em;
+      .card-buttons {
+        grid-template-columns: 1fr;
+        gap: 1rem;
       }
     }
   </style>
 </head>
 <body>
+  <!-- 页面加载动画 -->
+  <div class="page-loader">
+    <div class="loader-content">
+      <div class="loader-icon">✨</div>
+      <h3 style="color: var(--primary-pink); margin: 0;">加载中...</h3>
+    </div>
+  </div>
+
+  <!-- 浮动装饰元素 -->
+  <div class="floating-elements" id="floatingElements"></div>
+
   <div class="container">
-    <h1>🎉 Hii伊荷，生日快乐 🎉</h1>
-    <p>这是我偷偷为你打造的 <strong style="color:#d6336c;">生日小宇宙</strong> 💖<br/>
-      留下照片、查看留言、完成小目标，把xpx关起来，还有一封我们300天的信等你开启✨</p>
+    <h1>✨ 我们的小宇宙 ✨</h1>
+    <div class="subtitle">
+      这是我为你打造的 <strong>爱情小天地</strong><br/>
+      留下照片、查看留言、完成小目标，把xpx关起来，还有一封我们300天的信等你开启✨
+    </div>
 
     <div class="card-buttons">
-      <a href="./upload.html" class="card">
-        <div class="card-icon">📷</div>
-        上传照片
+      <a href="./upload.html" class="card ripple">
+        <div class="card-icon">📸</div>
+        <div class="card-title">上传照片</div>
         <div class="card-sub">留下可爱的自拍</div>
       </a>
-      <a href="./gallery.html" class="card">
-        <div class="card-icon">💌</div>
-        留言回忆
+      <a href="./gallery.html" class="card ripple">
+        <div class="card-icon">💕</div>
+        <div class="card-title">留言回忆</div>
         <div class="card-sub">看看我给大王写了什么</div>
       </a>
-      <a href="./todo.html" class="card">
-        <div class="card-icon">📋</div>
-        计划清单
+      <a href="./todo.html" class="card ripple">
+        <div class="card-icon">✅</div>
+        <div class="card-title">计划清单</div>
         <div class="card-sub">我们要一起完成</div>
       </a>
-      <a href="./prison.html" class="card">
-        <div class="card-icon">🗺</div>
-        恋爱监狱
+      <a href="./prison.html" class="card ripple">
+        <div class="card-icon">🏰</div>
+        <div class="card-title">恋爱监狱</div>
         <div class="card-sub">讨厌就关进去</div>
       </a>
-      <a href="./anniversary.html" class="card">
-        <div class="card-icon">🕯</div>
-        300天密信
+      <a href="./anniversary.html" class="card ripple">
+        <div class="card-icon">💌</div>
+        <div class="card-title">300天密信</div>
         <div class="card-sub">一封300天可以开的信</div>
       </a>
     </div>
 
-    <div class="footer-note">本站由xpx亲手打造 💖</div>
+    <div class="footer-note">本站由xpx亲手打造</div>
   </div>
-   <!-- 💗 她的恋爱监狱控制入口 -->
-  <div id="admin-entry" style="position: fixed; bottom: 18px; right: 20px; font-size: 24px; cursor: pointer; opacity: 0.6;">
-    🧸
+
+  <!-- 管理员入口 -->
+  <div id="admin-entry" title="管理入口">
+    👑
   </div>
+
   <script>
+    // 页面加载完成后隐藏加载动画
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.querySelector('.page-loader').style.display = 'none';
+      }, 800);
+    });
+
+    // 管理员入口点击事件
     document.getElementById("admin-entry").addEventListener("click", () => {
       window.location.href = "./prison-admin.html";
     });
+
+    // 创建浮动心形装饰
+    function createFloatingHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart';
+      heart.innerHTML = ['✨', '💫', '🌟', '🌸', '💕'][Math.floor(Math.random() * 5)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+      heart.style.animationDelay = Math.random() * 2 + 's';
+      
+      document.getElementById('floatingElements').appendChild(heart);
+      
+      setTimeout(() => {
+        heart.remove();
+      }, 8000);
+    }
+
+    // 定期创建浮动元素
+    setInterval(createFloatingHeart, 2000);
+
+    // 涟漪效果
+    document.querySelectorAll('.ripple').forEach(card => {
+      card.addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.classList.add('ripple-effect');
+        
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    });
+
+    // 鼠标跟随效果
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function animateCursor() {
+      cursorX += (mouseX - cursorX) * 0.1;
+      cursorY += (mouseY - cursorY) * 0.1;
+      
+      // 可以在这里添加鼠标跟随的视觉效果
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
   </script>
+
+  <style>
+    /* 涟漪效果样式 */
+    .ripple-effect {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.6);
+      transform: scale(0);
+      animation: rippleAnimation 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes rippleAnimation {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+  </style>
 </body>
 </html>

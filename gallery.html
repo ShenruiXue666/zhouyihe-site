@@ -3,115 +3,519 @@
 <head>
   <meta charset="UTF-8" />
   <title>写给大王的话 💗</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./styles/style.css" />
   <script type="module" src="./scripts/gallery-script.js"></script>
   <style>
+    /* 专用相册页面样式 */
     body {
-      background: linear-gradient(to bottom, #fff1f5, #f9f9ff);
-      font-family: "Helvetica Neue", "PingFang SC", sans-serif;
-      color: #444;
+      background: 
+        linear-gradient(135deg, #fff1f5 0%, #f9f9ff 50%, #ffeef6 100%);
+      position: relative;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text-dark);
       text-align: center;
-      padding: 30px 20px;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
     }
 
+    /* 优雅的几何背景 */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 25% 25%, rgba(214, 51, 108, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(247, 141, 167, 0.05) 0%, transparent 50%),
+        linear-gradient(45deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%);
+      background-size: 60px 60px, 80px 80px, 40px 40px, 40px 40px;
+      animation: backgroundShift 30s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes backgroundShift {
+      0%, 100% { transform: translateX(0) translateY(0); }
+      50% { transform: translateX(20px) translateY(10px); }
+    }
+
+    /* 页面容器 */
+    .page-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 导航栏现代化 */
     .nav {
-      margin-bottom: 20px;
+      margin-bottom: 3rem;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      animation: slideDown 0.8s ease-out;
+      transform: translateY(-20px);
+      opacity: 0;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes slideDown {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
 
     .nav a {
       text-decoration: none;
-      color: #f45c9c;
-      margin: 0 12px;
-      font-weight: bold;
+      color: var(--primary-pink);
+      margin: 0 1rem;
+      font-weight: 600;
+      padding: 0.8rem 1.5rem;
+      border-radius: 20px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      display: inline-block;
+      font-size: 1rem;
     }
 
+    .nav a::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(247, 141, 167, 0.2), rgba(214, 51, 108, 0.2));
+      border-radius: 20px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    .nav a:hover::before {
+      opacity: 1;
+    }
+
+    .nav a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(214, 51, 108, 0.2);
+    }
+
+    /* 标题增强 */
     h1 {
-      font-size: 1.9em;
-      color: #d6336c;
-      margin-bottom: 30px;
+      font-size: clamp(2rem, 5vw, 3rem);
+      background: linear-gradient(135deg, #d6336c, #f78da7, #ff9eb5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      position: relative;
+      animation: titleSlideUp 0.8s ease-out 0.3s both;
+      filter: drop-shadow(0 4px 15px rgba(214, 51, 108, 0.2));
     }
 
+    @keyframes titleSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 相册网格现代化 */
     .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 24px;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      padding: 1rem 0;
+      animation: fadeIn 0.8s ease-out 0.6s both;
+      opacity: 0;
     }
 
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* 留言卡片现代化 */
     .card {
-      width: 280px;
-      border-radius: 16px;
-      background: #fffdfd;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-      padding: 16px;
-      text-align: center;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 28px;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      transition: transform 0.3s ease;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      animation: cardSlideIn 0.8s ease-out both;
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+    }
+
+    .card:nth-child(odd) { animation-delay: 0.8s; }
+    .card:nth-child(even) { animation-delay: 1.0s; }
+    .card:nth-child(3n) { animation-delay: 1.2s; }
+
+    @keyframes cardSlideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(247, 141, 167, 0.1));
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 1;
+    }
+
+    .card:hover::before {
+      opacity: 1;
     }
 
     .card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 
+        0 30px 80px rgba(214, 51, 108, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.6);
+    }
+
+    /* 图片容器 */
+    .image-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px 28px 0 0;
+      height: 220px;
     }
 
     .card img {
       width: 100%;
-      max-height: 180px;
+      height: 100%;
       object-fit: cover;
-      border-radius: 14px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+      filter: brightness(1.05) saturate(1.1);
     }
 
-    .card p {
-      font-size: 15px;
-      color: #555;
-      padding: 10px 14px;
-      border-radius: 12px;
-      background: #fff0f5;
-      box-shadow: inset 0 0 4px rgba(0,0,0,0.04);
-      line-height: 1.6em;
+    .card:hover img {
+      transform: scale(1.08);
+      filter: brightness(1.1) saturate(1.2);
     }
 
+    /* 图片遮罩效果 */
+    .image-container::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(
+        135deg, 
+        rgba(214, 51, 108, 0.1) 0%, 
+        transparent 50%, 
+        rgba(247, 141, 167, 0.1) 100%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card:hover .image-container::after {
+      opacity: 1;
+    }
+
+    /* 文本内容 */
+    .message-text {
+      padding: 2rem;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(10px);
+      text-align: left;
+      line-height: 1.7;
+      color: var(--text-dark);
+      position: relative;
+      z-index: 2;
+      border-radius: 0 0 28px 28px;
+    }
+
+    .message-text::before {
+      content: """;
+      position: absolute;
+      top: -0.5rem;
+      left: 1rem;
+      font-size: 3rem;
+      color: var(--primary-pink);
+      opacity: 0.3;
+      font-family: Georgia, serif;
+    }
+
+    /* 时间戳 */
     .timestamp {
-      font-size: 0.85em;
-      color: #999;
-      margin-top: -4px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      text-align: right;
+      padding: 0.8rem 2rem 1.5rem;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(10px);
+      border-radius: 0 0 28px 28px;
+      margin-top: -1px;
+      position: relative;
+      z-index: 2;
     }
-    .delete-btn {
-    margin-top: 12px;
-    padding: 10px 16px;
-    background: #f78da7;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-family: "Helvetica Neue", "PingFang SC", sans-serif;
-    cursor: pointer;
-    width: 90%;
-    transition: all 0.2s ease;
-  }
 
-  .delete-btn:hover {
-    background: #f45c9c;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  }
-    @media (max-width: 480px) {
-      .card {
-        width: 90%;
+    /* 删除按钮现代化 */
+    .delete-btn {
+      margin: 1rem 2rem 2rem;
+      padding: 0.8rem 1.5rem;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+    }
+
+    .delete-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.6s;
+    }
+
+    .delete-btn:hover::before {
+      left: 100%;
+    }
+
+    .delete-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+    }
+
+    /* 空状态样式 */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(20px);
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      margin: 2rem auto;
+      max-width: 500px;
+      animation: fadeIn 0.8s ease-out 0.8s both;
+      opacity: 0;
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.6;
+    }
+
+    .empty-state h3 {
+      color: var(--text-medium);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .empty-state p {
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    /* 加载动画 */
+    .loading-placeholder {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      padding: 1rem 0;
+    }
+
+    .loading-card {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 28px;
+      overflow: hidden;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .loading-image {
+      height: 220px;
+      background: linear-gradient(135deg, rgba(214, 51, 108, 0.1), rgba(247, 141, 167, 0.1));
+    }
+
+    .loading-text {
+      padding: 2rem;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 0.6; }
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .gallery {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1rem;
       }
+
+      .nav {
+        padding: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .nav a {
+        margin: 0 0.5rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .message-text {
+        padding: 1.5rem;
+        font-size: 0.95rem;
+      }
+
+      .timestamp {
+        padding: 0.6rem 1.5rem 1.2rem;
+      }
+
+      .delete-btn {
+        margin: 1rem 1.5rem 1.5rem;
+        padding: 0.7rem 1.2rem;
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+
+      .nav {
+        margin-bottom: 1.5rem;
+        padding: 0.8rem;
+      }
+
+      .nav a {
+        display: block;
+        margin: 0.3rem 0;
+        text-align: center;
+      }
+
+      .gallery {
+        padding: 0.5rem;
+      }
+
+      .message-text {
+        padding: 1rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* 滚动进入动画 */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease-out;
+    }
+
+    .scroll-reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 <body>
-  <div class="nav">
-    <a href="./index.html">🏠 首页</a>
-    <a href="./upload.html">📸 上传留言</a>
+  <div class="page-container">
+    <nav class="nav">
+      <a href="./index.html">✨ 首页</a>
+      <a href="./upload.html">📷 上传留言</a>
+    </nav>
+
+    <h1>💕 写给大王的话 💕</h1>
+
+    <div class="gallery" id="gallery"></div>
   </div>
 
-  <h1>💗 写给大王的话 💗</h1>
+  <script>
+    // 滚动动画观察器
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
 
-  <div class="gallery" id="gallery"></div>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, observerOptions);
+
+    // 监听新添加的卡片
+    function observeNewCards() {
+      document.querySelectorAll('.card:not(.revealed)').forEach(card => {
+        card.classList.add('scroll-reveal');
+        observer.observe(card);
+      });
+    }
+
+    // 初始化滚动动画
+    setTimeout(observeNewCards, 1000);
+
+    // 监听 gallery 容器的变化，当新卡片添加时自动应用动画
+    const galleryObserver = new MutationObserver(observeNewCards);
+    galleryObserver.observe(document.getElementById('gallery'), { 
+      childList: true 
+    });
+
+    // 页面加载完成动画
+    window.addEventListener('load', () => {
+      // 为现有卡片添加staggered动画
+      const cards = document.querySelectorAll('.card');
+      cards.forEach((card, index) => {
+        card.style.animationDelay = `${0.8 + index * 0.2}s`;
+      });
+    });
+
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
 </body>
 </html>
