@@ -468,6 +468,80 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+
+    /* 判决书样式 */
+    .sentence-paper {
+      background: rgba(255, 248, 220, 0.9);
+      border: 3px solid #8b4513;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 
+        0 8px 30px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      position: relative;
+      animation: paperUnfold 0.8s ease-out;
+    }
+
+    @keyframes paperUnfold {
+      from {
+        transform: rotateX(-90deg);
+        opacity: 0;
+      }
+      to {
+        transform: rotateX(0deg);
+        opacity: 1;
+      }
+    }
+
+    .sentence-paper::before {
+      content: "👑";
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2rem;
+      background: rgba(255, 248, 220, 0.9);
+      padding: 0 10px;
+    }
+
+    .sentence-paper h3 {
+      color: #8b4513;
+      text-align: center;
+      margin: 0 0 1.5rem 0;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .sentence-item {
+      margin: 1rem 0;
+      padding: 0.8rem;
+      background: rgba(139, 69, 19, 0.1);
+      border-radius: 10px;
+      border-left: 4px solid #8b4513;
+    }
+
+    .sentence-item strong {
+      color: #8b4513;
+      font-weight: bold;
+      display: inline-block;
+      min-width: 80px;
+    }
+
+    .sentence-item span {
+      color: #5d4037;
+      font-weight: 500;
+    }
+
+    .sentence-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: #8b4513;
+      font-style: italic;
+      border-top: 2px solid #8b4513;
+      padding-top: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -489,93 +563,32 @@
     <div class="prison-box">
       <div id="emojiIcon">⛓️</div>
       <div id="prisonStatus">正在检查监禁状态...</div>
+      
+      <!-- 判决书 -->
+      <div class="sentence-paper" id="sentencePaper" style="display: none;">
+        <h3>📋 判决书</h3>
+        <div class="sentence-item">
+          <strong>罪名：</strong>
+          <span id="crimeText">-</span>
+        </div>
+        <div class="sentence-item">
+          <strong>刑期：</strong>
+          <span id="durationText">-</span>
+        </div>
+        <div class="sentence-item">
+          <strong>判决时间：</strong>
+          <span id="sentenceTimeText">-</span>
+        </div>
+        <div class="sentence-footer">
+          恋爱法庭
+        </div>
+      </div>
+      
       <button id="requestBtn" style="display:none;">🙏 申请出狱</button>
       <div class="free-msg" id="freedomMsg">🎉 你被放出来啦！快去找她吧！</div>
     </div>
   </div>
 
-  <script>
-    // 创建监狱粒子效果
-    function createParticles() {
-      const particles = ['⛓️', '🔒', '🗝️', '💔', '😢', '🚪'];
-      const particlesContainer = document.getElementById('particles');
-      
-      function createParticle() {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.innerHTML = particles[Math.floor(Math.random() * particles.length)];
-        particle.style.left = Math.random() * 100 + 'vw';
-        particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
-        particle.style.animationDelay = Math.random() * 2 + 's';
-        
-        particlesContainer.appendChild(particle);
-        
-        setTimeout(() => {
-          particle.remove();
-        }, 10000);
-      }
 
-      // 创建初始粒子
-      for (let i = 0; i < 3; i++) {
-        setTimeout(createParticle, i * 1000);
-      }
-
-      // 定期创建新粒子
-      setInterval(createParticle, 3000);
-    }
-
-    // 更新状态显示
-    function updatePrisonStatus(isPrisoned, message) {
-      const icon = document.getElementById('emojiIcon');
-      const status = document.getElementById('prisonStatus');
-      const button = document.getElementById('requestBtn');
-      const freeMsg = document.getElementById('freedomMsg');
-
-      // 清除之前的状态类
-      icon.className = '';
-      status.className = '';
-
-      if (isPrisoned) {
-        icon.textContent = '⛓️';
-        icon.className = 'imprisoned';
-        status.className = 'status-imprisoned';
-        status.textContent = message || '你因为太可爱被关进监狱了！😤';
-        button.style.display = 'block';
-        freeMsg.style.display = 'none';
-      } else {
-        icon.textContent = '🕊️';
-        icon.className = 'free';
-        status.className = 'status-free';
-        status.textContent = message || '你是自由的！';
-        button.style.display = 'none';
-        freeMsg.style.display = 'block';
-      }
-    }
-
-    // 申请出狱动画
-    function animateRequest() {
-      const button = document.getElementById('requestBtn');
-      const originalText = button.textContent;
-      
-      button.innerHTML = '<span class="loading"></span>申请中...';
-      button.disabled = true;
-      
-      setTimeout(() => {
-        button.textContent = originalText;
-        button.disabled = false;
-      }, 3000);
-    }
-
-    // 监听申请按钮
-    document.getElementById('requestBtn').addEventListener('click', animateRequest);
-
-    // 初始化
-    createParticles();
-
-    // 模拟状态检查（实际项目中会连接到Firebase）
-    setTimeout(() => {
-      updatePrisonStatus(true, '你因为太可爱被关进监狱了！😤');
-    }, 1000);
-  </script>
 </body>
 </html>

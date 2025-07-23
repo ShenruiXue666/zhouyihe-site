@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <title>恋爱监狱 · 女王管理中心</title>
+  <title>恋爱监狱 ·管理中心</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="./styles/style.css" />
   <script type="module" src="./scripts/prison-admin.js"></script>
@@ -36,13 +36,63 @@
       padding: 30px;
       border-radius: 20px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      max-width: 420px;
+      max-width: 500px;
       margin: 0 auto;
     }
 
     #currentStatus {
       font-size: 1.2em;
+      margin-bottom: 30px;
+      padding: 15px;
+      background: rgba(247, 141, 167, 0.1);
+      border-radius: 15px;
+      border: 2px solid rgba(247, 141, 167, 0.3);
+    }
+
+    .form-section {
+      margin-bottom: 25px;
+      text-align: left;
+    }
+
+    .form-group {
       margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #d6336c;
+      font-size: 1.1em;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #f78da7;
+      border-radius: 15px;
+      font-size: 1em;
+      font-family: inherit;
+      background: rgba(255, 255, 255, 0.8);
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: #f45c9c;
+      box-shadow: 0 0 0 3px rgba(244, 92, 156, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .sentence-inputs {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 15px;
+      align-items: end;
     }
 
     .btns {
@@ -50,22 +100,73 @@
       gap: 16px;
       justify-content: center;
       flex-wrap: wrap;
+      margin-top: 30px;
     }
 
     .btns button {
       flex: 1;
-      padding: 12px 20px;
+      min-width: 140px;
+      padding: 15px 20px;
       border: none;
-      border-radius: 12px;
+      border-radius: 25px;
       font-size: 1em;
-      background-color: #f78da7;
-      color: white;
+      font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s ease;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .btns button:hover {
-      background-color: #f45c9c;
+    #lockBtn {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+      color: white;
+      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+    }
+
+    #lockBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+    }
+
+    #freeBtn {
+      background: linear-gradient(135deg, #51cf66, #40c057);
+      color: white;
+      box-shadow: 0 8px 25px rgba(64, 192, 87, 0.3);
+    }
+
+    #freeBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(64, 192, 87, 0.4);
+    }
+
+    .crime-examples {
+      font-size: 0.9em;
+      color: #999;
+      margin-top: 5px;
+      font-style: italic;
+    }
+
+    .current-sentence {
+      background: rgba(255, 107, 107, 0.1);
+      border: 2px solid rgba(255, 107, 107, 0.3);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .current-sentence h3 {
+      color: #ff6b6b;
+      margin: 0 0 10px 0;
+      font-size: 1.1em;
+    }
+
+    .sentence-detail {
+      margin: 8px 0;
+      font-size: 1em;
+    }
+
+    .sentence-detail strong {
+      color: #d6336c;
     }
   </style>
 </head>
@@ -79,10 +180,82 @@
 
   <div class="admin-box">
     <div id="currentStatus">加载中...</div>
+    
+    <!-- 当前判决信息 -->
+    <div id="currentSentence" class="current-sentence" style="display: none;">
+      <h3>📋 当前判决</h3>
+      <div class="sentence-detail">
+        <strong>罪名：</strong><span id="currentCrime">-</span>
+      </div>
+      <div class="sentence-detail">
+        <strong>刑期：</strong><span id="currentDuration">-</span>
+      </div>
+      <div class="sentence-detail">
+        <strong>判决时间：</strong><span id="sentenceTime">-</span>
+      </div>
+    </div>
+
+    <!-- 判决表单 -->
+    <div class="form-section">
+      <div class="form-group">
+        <label for="crimeSelect">🚨 选择罪名</label>
+        <select id="crimeSelect">
+          <option value="">请选择罪名...</option>
+          <option value="忘记续火花">忘记续火花</option>
+          <option value="回消息太慢">回消息太慢</option>
+          <option value="没有哄我开心">没有哄我开心</option>
+          <option value="玩游戏忽略我">玩游戏忽略我</option>
+          <option value="忘记重要日子">忘记重要日子</option>
+          <option value="说话语气不好">说话语气不好</option>
+          <option value="没有主动关心">没有主动关心</option>
+          <option value="自定义罪名">自定义罪名</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="customCrimeGroup" style="display: none;">
+        <label for="customCrime">✍️ 自定义罪名</label>
+        <textarea id="customCrime" placeholder="详细描述他的罪行..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="duration">⏰ 刑期</label>
+        <div class="sentence-inputs">
+          <select id="duration">
+            <option value="10分钟">10分钟</option>
+            <option value="30分钟">30分钟</option>
+            <option value="1小时">1小时</option>
+            <option value="2小时">2小时</option>
+            <option value="半天">半天</option>
+            <option value="1天">1天</option>
+            <option value="3天">3天</option>
+            <option value="1周">1周</option>
+            <option value="无期">无期徒刑</option>
+          </select>
+          <div style="font-size: 0.9em; color: #999; text-align: center;">
+            🕐 选择关押时长
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="btns">
-      <button id="lockBtn">🔒 狠心地把 xpx 关进去</button>
-      <button id="freeBtn">🔓 放他出来，亲亲他</button>
+      <button id="lockBtn">🔒 执行判决</button>
+      <button id="freeBtn">🔓 特赦释放</button>
     </div>
   </div>
+
+  <script>
+    // 罪名选择逻辑
+    const crimeSelect = document.getElementById('crimeSelect');
+    const customCrimeGroup = document.getElementById('customCrimeGroup');
+    
+    crimeSelect.addEventListener('change', function() {
+      if (this.value === '自定义罪名') {
+        customCrimeGroup.style.display = 'block';
+      } else {
+        customCrimeGroup.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
