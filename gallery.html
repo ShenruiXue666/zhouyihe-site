@@ -381,35 +381,7 @@
       transform: rotate(90deg);
     }
 
-    /* 贴纸显示 */
-    .stickers-container {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 3;
-    }
 
-    .sticker {
-      position: absolute;
-      font-size: 2rem;
-      animation: stickerFloat 3s ease-in-out infinite;
-      filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
-    }
-
-    .sticker:nth-child(odd) {
-      animation-delay: 0.5s;
-    }
-
-    .sticker:nth-child(even) {
-      animation-delay: 1s;
-    }
-
-    @keyframes stickerFloat {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-5px) rotate(5deg); }
-    }
 
 
 

@@ -168,6 +168,109 @@
     .sentence-detail strong {
       color: #d6336c;
     }
+
+    /* 邮件设置样式 */
+    .email-settings-section {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .email-settings-btn {
+      background: linear-gradient(135deg, #ffa726, #ff9800);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 20px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(255, 152, 0, 0.3);
+    }
+
+    .email-settings-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(255, 152, 0, 0.4);
+    }
+
+    .email-settings-panel {
+      background: rgba(255, 245, 232, 0.8);
+      border: 2px solid rgba(255, 152, 0, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 15px;
+      text-align: left;
+      animation: slideDown 0.3s ease;
+    }
+
+    .email-settings-panel h3 {
+      color: #ff9800;
+      text-align: center;
+      margin: 0 0 20px 0;
+      font-size: 1.2em;
+    }
+
+    .email-settings-panel .form-group label {
+      color: #ff9800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .email-settings-panel input[type="checkbox"] {
+      width: auto;
+      margin-right: 8px;
+    }
+
+    .email-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .save-btn {
+      background: linear-gradient(135deg, #4caf50, #45a049);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .save-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+    }
+
+    .test-btn {
+      background: linear-gradient(135deg, #2196f3, #1976d2);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .test-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   </style>
 </head>
 <body>
@@ -241,6 +344,35 @@
     <div class="btns">
       <button id="lockBtn">🔒 执行判决</button>
       <button id="freeBtn">🔓 特赦释放</button>
+    </div>
+    
+    <!-- 邮件设置区域 -->
+    <div class="email-settings-section">
+      <button id="emailSettingsToggle" class="email-settings-btn">📧 邮件设置</button>
+      
+      <div id="emailSettingsPanel" class="email-settings-panel" style="display: none;">
+        <h3>📧 邮件提醒设置</h3>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="emailEnabled"> 启用邮件提醒
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label for="yourEmail">你的邮箱地址</label>
+          <input type="email" id="yourEmail" placeholder="your-email@example.com">
+        </div>
+        
+        <div class="form-group">
+          <label for="girlfriendEmail">女朋友的邮箱地址</label>
+          <input type="email" id="girlfriendEmail" placeholder="girlfriend@example.com">
+        </div>
+        
+        <div class="email-buttons">
+          <button id="saveEmailSettings" class="save-btn">💾 保存设置</button>
+          <button id="testEmail" class="test-btn">🧪 发送测试邮件</button>
+        </div>
+      </div>
     </div>
   </div>
 

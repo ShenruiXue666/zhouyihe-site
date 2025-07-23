@@ -48,115 +48,121 @@ async function loadMessages() {
       return;
     }
 
-    querySnapshot.forEach((docSnap) => {
-      const data = docSnap.data();
-      const docId = docSnap.id;
-      const { imageUrl, message, imageName, createdAt, stickers = [], likes = { xpx: false, "404": false } } = data;
-
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const { imageUrl, message, imageName, createdAt, likes = { xpx: false, "404": false } } = data;
+      
       const card = document.createElement("div");
       card.className = "card";
-      card.dataset.id = docId;
-      card.dataset.img = imageName;
+      card.dataset.id = doc.id;
+      card.dataset.imageName = imageName || "";
 
-      // 图片容器
+      let cardHTML = "";
+
       if (imageUrl) {
-        const imageContainer = document.createElement("div");
-        imageContainer.className = "image-container";
+        cardHTML += `
+          <div class="image-container">
+            <img src="${imageUrl}" alt="留言图片" loading="lazy">
+          </div>
+        `;
         
-        const img = document.createElement("img");
-        img.src = imageUrl;
-        img.alt = "留言图片";
-        imageContainer.appendChild(img);
-
-        // 添加贴纸
-        if (stickers && stickers.length > 0) {
-          const stickersContainer = document.createElement("div");
-          stickersContainer.className = "stickers-container";
-          
-          stickers.forEach((sticker, index) => {
-            const stickerElement = document.createElement("div");
-            stickerElement.className = "sticker";
-            stickerElement.textContent = sticker.emoji;
-            stickerElement.style.left = sticker.x + "%";
-            stickerElement.style.top = sticker.y + "%";
-            stickerElement.style.animationDelay = (index * 0.3) + "s";
-            stickersContainer.appendChild(stickerElement);
-          });
-          
-          imageContainer.appendChild(stickersContainer);
-        }
-
-        // 点击图片进入全屏模式
-        imageContainer.addEventListener("click", (e) => {
-          e.stopPropagation();
-          openFullscreen(imageUrl, message, createdAt?.toDate(), stickers);
+        // 图片点击全屏
+        card.addEventListener("click", (e) => {
+          if (!e.target.closest('.like-button') && !e.target.closest('.delete-btn')) {
+            openFullscreen(imageUrl, message, createdAt?.toDate());
+          }
         });
-
-        card.appendChild(imageContainer);
       }
 
       // 留言内容
       if (message && message.trim()) {
-        const messageDiv = document.createElement("div");
-        messageDiv.className = "message-text";
-        messageDiv.textContent = message;
-        card.appendChild(messageDiv);
+        cardHTML += `
+          <div class="message-text">
+            ${message}
+          </div>
+        `;
       }
 
       // 时间戳
       if (createdAt?.toDate) {
-        const time = document.createElement("div");
         const date = createdAt.toDate();
-        time.className = "timestamp";
-        time.textContent = `🎀 ${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-        card.appendChild(time);
+        cardHTML += `
+          <div class="timestamp">
+            🎀 ${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}
+          </div>
+        `;
       }
 
       // 点赞区域
-      const likeSection = document.createElement("div");
-      likeSection.className = "like-section";
-
-      // 左边点赞按钮 (xpx)
-      const xpxLikeBtn = document.createElement("div");
-      xpxLikeBtn.className = `like-button ${likes.xpx ? 'liked' : ''}`;
-      xpxLikeBtn.dataset.user = "xpx";
-      xpxLikeBtn.innerHTML = `
-        <span class="like-icon">💕</span>
-        <span class="like-text">xpx</span>
+      cardHTML += `
+        <div class="like-section">
+          <div class="like-button ${likes.xpx ? 'liked' : ''}">
+            <span class="like-icon">💕</span>
+            <span class="like-text">xpx</span>
+          </div>
+          <div class="like-button ${likes["404"] ? 'liked' : ''}">
+            <span class="like-icon">💕</span>
+            <span class="like-text">404</span>
+          </div>
+        </div>
       `;
-
-      // 右边点赞按钮 (404)
-      const btn404LikeBtn = document.createElement("div");
-      btn404LikeBtn.className = `like-button ${likes["404"] ? 'liked' : ''}`;
-      btn404LikeBtn.dataset.user = "404";
-      btn404LikeBtn.innerHTML = `
-        <span class="like-icon">💕</span>
-        <span class="like-text">404</span>
-      `;
-
-      // 点赞事件
-      xpxLikeBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        toggleLike(docId, "xpx", xpxLikeBtn);
-      });
-
-      btn404LikeBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        toggleLike(docId, "404", btn404LikeBtn);
-      });
-
-      likeSection.appendChild(xpxLikeBtn);
-      likeSection.appendChild(btn404LikeBtn);
-      card.appendChild(likeSection);
 
       // 删除按钮
-      const delBtn = document.createElement("button");
-      delBtn.className = "delete-btn";
-      delBtn.textContent = "×";
-      card.appendChild(delBtn);
+      cardHTML += `
+        <button class="delete-btn">×</button>
+      `;
 
+      card.innerHTML = cardHTML;
       
+      // 绑定点赞事件
+      const likeButtons = card.querySelectorAll('.like-button');
+      likeButtons.forEach(button => {
+        button.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const user = button.querySelector('.like-text').textContent;
+          toggleLike(doc.id, user, button);
+        });
+      });
+      
+      // 绑定删除事件
+      const deleteBtn = card.querySelector('.delete-btn');
+      deleteBtn.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const docId = doc.id;
+        const imageName = card.dataset.imageName;
 
+        if (!confirm("确认删除这条留言和图片吗？")) return;
+
+        try {
+          deleteBtn.disabled = true;
+          deleteBtn.textContent = "删除中...";
+
+          // 删除图片文件（如果有）
+          if (imageName) {
+            const imageRef = ref(storage, `images/${imageName}`);
+            try {
+              await deleteObject(imageRef);
+              console.log("图片删除成功");
+            } catch (storageError) {
+              console.log("图片可能已被删除:", storageError);
+            }
+          }
+
+          // 删除数据库记录
+          await deleteDoc(doc(db, "messages", docId));
+
+          // 移除卡片元素
+          card.remove();
+
+          showToast("删除成功！", "success");
+        } catch (error) {
+          console.error("删除失败:", error);
+          showToast("删除失败，请重试", "error");
+          deleteBtn.disabled = false;
+          deleteBtn.textContent = "×";
+        }
+      });
+      
       gallery.appendChild(card);
     });
   } catch (error) {
@@ -250,7 +256,7 @@ toastStyle.textContent = `
 document.head.appendChild(toastStyle);
 
 // 打开全屏模式
-function openFullscreen(imageUrl, message, date, stickers) {
+function openFullscreen(imageUrl, message, date) {
   fullscreenImage.src = imageUrl;
   
   let infoHtml = "";
@@ -259,9 +265,6 @@ function openFullscreen(imageUrl, message, date, stickers) {
   }
   if (date) {
     infoHtml += `<p style="opacity: 0.8;">📅 ${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}</p>`;
-  }
-  if (stickers && stickers.length > 0) {
-    infoHtml += `<p style="margin-top: 1rem;">✨ 贴纸: ${stickers.map(s => s.emoji).join(" ")}</p>`;
   }
   
   fullscreenInfo.innerHTML = infoHtml;
@@ -298,7 +301,7 @@ gallery.addEventListener("click", async (e) => {
   if (e.target.classList.contains("delete-btn")) {
     const card = e.target.closest(".card");
     const docId = card.dataset.id;
-    const imageName = card.dataset.img;
+    const imageName = card.dataset.imageName;
 
     if (!confirm("确认删除这条留言和图片吗？")) return;
 

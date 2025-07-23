@@ -8,6 +8,7 @@ import {
   setDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import { sendPrisonEmail, sendTestEmail, getEmailSettings } from "./email-service.js";
 
 const statusText = document.getElementById("currentStatus");
 const lockBtn = document.getElementById("lockBtn");
@@ -22,7 +23,17 @@ const currentCrime = document.getElementById("currentCrime");
 const currentDuration = document.getElementById("currentDuration");
 const sentenceTime = document.getElementById("sentenceTime");
 
+// 邮件设置元素
+const emailSettingsToggle = document.getElementById("emailSettingsToggle");
+const emailSettingsPanel = document.getElementById("emailSettingsPanel");
+const emailEnabled = document.getElementById("emailEnabled");
+const yourEmail = document.getElementById("yourEmail");
+const girlfriendEmail = document.getElementById("girlfriendEmail");
+const saveEmailSettings = document.getElementById("saveEmailSettings");
+const testEmail = document.getElementById("testEmail");
+
 const jailDocRef = doc(db, "status", "prison");
+const emailSettingsRef = doc(db, "settings", "email");
 
 function updateUI(data) {
   const { jailed, requested, crime, duration: sentenceDuration, sentencedAt } = data || {};
@@ -177,7 +188,21 @@ lockBtn.addEventListener("click", async () => {
       sentencedAt: serverTimestamp()
     });
     
-    showToast(`已成功关押！罪名：${crime}，刑期：${selectedDuration}`, "success");
+    // 发送入狱邮件通知
+    try {
+      const emailResult = await sendPrisonEmail('imprisoned', {
+        crime: crime,
+        duration: selectedDuration
+      });
+      if (emailResult.success) {
+        showToast(`已成功关押！罪名：${crime}，刑期：${selectedDuration}\n📧 邮件通知已发送`, "success");
+      } else {
+        showToast(`已成功关押！罪名：${crime}，刑期：${selectedDuration}`, "success");
+      }
+    } catch (emailError) {
+      console.error("发送入狱邮件失败:", emailError);
+      showToast(`已成功关押！罪名：${crime}，刑期：${selectedDuration}`, "success");
+    }
     
     // 清空表单
     crimeSelect.value = "";
@@ -211,7 +236,18 @@ freeBtn.addEventListener("click", async () => {
       // 保留犯罪记录，不清除crime, duration, sentencedAt
     });
     
-    showToast("已特赦释放！他重获自由了 🕊️", "success");
+    // 发送出狱邮件通知
+    try {
+      const emailResult = await sendPrisonEmail('released');
+      if (emailResult.success) {
+        showToast("已特赦释放！他重获自由了 🕊️\n📧 邮件通知已发送", "success");
+      } else {
+        showToast("已特赦释放！他重获自由了 🕊️", "success");
+      }
+    } catch (emailError) {
+      console.error("发送出狱邮件失败:", emailError);
+      showToast("已特赦释放！他重获自由了 🕊️", "success");
+    }
     
   } catch (error) {
     console.error("释放失败:", error);
@@ -221,3 +257,93 @@ freeBtn.addEventListener("click", async () => {
     freeBtn.textContent = "🔓 特赦释放";
   }
 });
+
+// 邮件设置功能
+async function loadEmailSettings() {
+  try {
+    const settings = await getEmailSettings();
+    emailEnabled.checked = settings.enabled || false;
+    yourEmail.value = settings.yourEmail || '';
+    girlfriendEmail.value = settings.girlfriendEmail || '';
+  } catch (error) {
+    console.error("加载邮件设置失败:", error);
+  }
+}
+
+// 邮件设置切换
+emailSettingsToggle.addEventListener("click", () => {
+  const isVisible = emailSettingsPanel.style.display !== "none";
+  emailSettingsPanel.style.display = isVisible ? "none" : "block";
+  
+  if (!isVisible) {
+    loadEmailSettings();
+  }
+});
+
+// 保存邮件设置
+saveEmailSettings.addEventListener("click", async () => {
+  try {
+    saveEmailSettings.disabled = true;
+    saveEmailSettings.textContent = "保存中...";
+    
+    const settings = {
+      enabled: emailEnabled.checked,
+      yourEmail: yourEmail.value.trim(),
+      girlfriendEmail: girlfriendEmail.value.trim(),
+      updatedAt: serverTimestamp()
+    };
+    
+    // 验证邮箱格式
+    if (settings.enabled && (!settings.yourEmail || !settings.girlfriendEmail)) {
+      alert("启用邮件提醒时，请填写完整的邮箱地址！");
+      return;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (settings.yourEmail && !emailRegex.test(settings.yourEmail)) {
+      alert("请输入有效的邮箱地址（你的邮箱）！");
+      return;
+    }
+    
+    if (settings.girlfriendEmail && !emailRegex.test(settings.girlfriendEmail)) {
+      alert("请输入有效的邮箱地址（女朋友的邮箱）！");
+      return;
+    }
+    
+    await setDoc(emailSettingsRef, settings);
+    showToast("邮件设置保存成功！📧", "success");
+    
+  } catch (error) {
+    console.error("保存邮件设置失败:", error);
+    showToast("保存失败，请重试", "error");
+  } finally {
+    saveEmailSettings.disabled = false;
+    saveEmailSettings.textContent = "💾 保存设置";
+  }
+});
+
+// 发送测试邮件
+testEmail.addEventListener("click", async () => {
+  try {
+    testEmail.disabled = true;
+    testEmail.textContent = "发送中...";
+    
+    const result = await sendTestEmail();
+    
+    if (result.success) {
+      showToast("测试邮件发送成功！请查收邮箱 📧", "success");
+    } else {
+      showToast(`测试邮件发送失败：${result.message}`, "error");
+    }
+    
+  } catch (error) {
+    console.error("发送测试邮件失败:", error);
+    showToast("发送测试邮件失败，请检查设置", "error");
+  } finally {
+    testEmail.disabled = false;
+    testEmail.textContent = "🧪 发送测试邮件";
+  }
+});
+
+// 初始化邮件设置
+loadEmailSettings();

@@ -7,6 +7,7 @@ import {
   onSnapshot,
   updateDoc,
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import { sendPrisonEmail } from "./email-service.js";
 
 const statusText = document.getElementById("prisonStatus");
 const emoji = document.getElementById("emojiIcon");
@@ -152,7 +153,18 @@ requestBtn.addEventListener("click", async () => {
       requested: true,
     });
     
-    showToast("申请已发送！等待女王的恩赦 🙏", "info");
+    // 发送申请出狱邮件
+    try {
+      const emailResult = await sendPrisonEmail('requestRelease');
+      if (emailResult.success) {
+        showToast("申请已发送！邮件通知已发送 📧", "success");
+      } else {
+        showToast("申请已发送！等待女王的恩赦 🙏", "info");
+      }
+    } catch (emailError) {
+      console.error("发送邮件失败:", emailError);
+      showToast("申请已发送！等待女王的恩赦 🙏", "info");
+    }
     
   } catch (error) {
     console.error("申请出狱失败:", error);
