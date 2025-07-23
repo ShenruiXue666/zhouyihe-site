@@ -15,14 +15,8 @@ console.log("脚本已加载");
 const uploadBtn = document.getElementById("uploadBtn");
 const fileInput = document.getElementById("imageInput");
 const fileName = document.getElementById("fileName");
-const stickerGrid = document.getElementById("stickerGrid");
-const selectedStickers = document.getElementById("selectedStickers");
-const clearStickers = document.getElementById("clearStickers");
 
 console.log("上传按钮元素:", uploadBtn);
-
-// 贴纸管理
-let selectedStickersData = [];
 
 // 文件选择事件
 fileInput.addEventListener("change", (e) => {
@@ -30,121 +24,6 @@ fileInput.addEventListener("change", (e) => {
   fileName.textContent = selectedFileName;
   fileName.style.color = selectedFileName !== "未选择任何文件" ? "var(--primary-pink)" : "";
   console.log("文件已选择:", selectedFileName);
-});
-
-// 贴纸选择功能
-stickerGrid.addEventListener("click", (e) => {
-  if (e.target.classList.contains("sticker-item")) {
-    const emoji = e.target.dataset.emoji;
-    addSticker(emoji);
-    
-    // 添加选中动画
-    e.target.classList.add("selected");
-    setTimeout(() => {
-      e.target.classList.remove("selected");
-    }, 500);
-  }
-});
-
-// 添加贴纸
-function addSticker(emoji) {
-  // 限制最多8个贴纸
-  if (selectedStickersData.length >= 8) {
-    showToast("最多只能添加8个贴纸哦！", "warning");
-    return;
-  }
-
-  // 随机生成位置（避免重叠）
-  const position = generateRandomPosition();
-  
-  const stickerData = {
-    emoji: emoji,
-    x: position.x,
-    y: position.y,
-    id: Date.now() + Math.random()
-  };
-
-  selectedStickersData.push(stickerData);
-  updateSelectedStickersDisplay();
-  
-  showToast(`已添加贴纸 ${emoji}`, "success");
-}
-
-// 生成随机位置
-function generateRandomPosition() {
-  const attempts = 50; // 最大尝试次数
-  let position;
-  
-  for (let i = 0; i < attempts; i++) {
-    position = {
-      x: Math.random() * 70 + 10, // 10%-80% 范围
-      y: Math.random() * 60 + 10  // 10%-70% 范围
-    };
-    
-    // 检查是否与现有贴纸重叠
-    const isOverlapping = selectedStickersData.some(sticker => {
-      const distance = Math.sqrt(
-        Math.pow(position.x - sticker.x, 2) + 
-        Math.pow(position.y - sticker.y, 2)
-      );
-      return distance < 15; // 最小距离15%
-    });
-    
-    if (!isOverlapping) {
-      break;
-    }
-  }
-  
-  return position;
-}
-
-// 更新已选择贴纸显示
-function updateSelectedStickersDisplay() {
-  if (selectedStickersData.length === 0) {
-    selectedStickers.innerHTML = '<p class="stickers-hint">点击贴纸添加到你的照片上 💖</p>';
-    return;
-  }
-
-  let html = '';
-  selectedStickersData.forEach((sticker, index) => {
-    html += `
-      <div class="selected-sticker" data-id="${sticker.id}">
-        <span>${sticker.emoji}</span>
-        <button class="sticker-remove" data-id="${sticker.id}">×</button>
-      </div>
-    `;
-  });
-  selectedStickers.innerHTML = html;
-
-  // 绑定删除事件
-  selectedStickers.querySelectorAll('.sticker-remove').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      const id = this.getAttribute('data-id');
-      selectedStickersData = selectedStickersData.filter(sticker => sticker.id != id);
-      updateSelectedStickersDisplay();
-      showToast("已移除贴纸", "info");
-    });
-  });
-}
-
-// 移除贴纸
-window.removeSticker = function(stickerId) {
-  selectedStickersData = selectedStickersData.filter(sticker => sticker.id !== stickerId);
-  updateSelectedStickersDisplay();
-  showToast("已移除贴纸", "info");
-};
-
-// 清空所有贴纸
-clearStickers.addEventListener("click", () => {
-  if (selectedStickersData.length === 0) {
-    showToast("没有贴纸需要清空", "info");
-    return;
-  }
-  
-  selectedStickersData = [];
-  updateSelectedStickersDisplay();
-  showToast("已清空所有贴纸", "success");
 });
 
 // 显示提示消息
@@ -175,13 +54,6 @@ uploadBtn.addEventListener("click", async () => {
     console.log("验证失败：两项都为空");
     return;
   }
-
-  // 允许只写文字+贴纸，不再强制要求图片
-  // if (selectedStickersData.length > 0 && !file) {
-  //   status.textContent = "❌ 添加了贴纸需要同时上传图片";
-  //   status.className = "error";
-  //   return;
-  // }
 
   // 禁用按钮，防止重复提交
   uploadBtn.disabled = true;
@@ -221,12 +93,7 @@ uploadBtn.addEventListener("click", async () => {
       likes: {
         xpx: false,
         "404": false
-      },
-      stickers: selectedStickersData.map(sticker => ({
-        emoji: sticker.emoji,
-        x: sticker.x,
-        y: sticker.y
-      }))
+      }
     };
 
     await addDoc(collection(db, "messages"), messageData);
@@ -242,8 +109,6 @@ uploadBtn.addEventListener("click", async () => {
     document.getElementById("message").value = "";
     fileName.textContent = "未选择任何文件";
     fileName.style.color = "";
-    selectedStickersData = [];
-    updateSelectedStickersDisplay();
     
     // 创建成功粒子效果
     createSuccessParticles();
