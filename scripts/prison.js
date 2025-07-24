@@ -19,6 +19,8 @@ const sentencePaper = document.getElementById("sentencePaper");
 const crimeText = document.getElementById("crimeText");
 const durationText = document.getElementById("durationText");
 const sentenceTimeText = document.getElementById("sentenceTimeText");
+let countdownTimer = null;
+let countdownElem = null;
 
 const jailDocRef = doc(db, "status", "prison");
 
@@ -56,11 +58,15 @@ function updateUI(data) {
       if (sentencedAt?.toDate) {
         const date = sentencedAt.toDate();
         sentenceTimeText.textContent = formatDate(date);
+        // 倒计时显示
+        showCountdown(duration, date, jailed);
       } else {
         sentenceTimeText.textContent = "未知";
+        clearCountdown();
       }
     } else {
       sentencePaper.style.display = "none";
+      clearCountdown();
     }
     
     // 按钮状态
@@ -79,6 +85,7 @@ function updateUI(data) {
     sentencePaper.style.display = "none";
     requestBtn.style.display = "none";
     freedomMsg.style.display = "block";
+    clearCountdown();
   }
 }
 
@@ -145,17 +152,25 @@ requestBtn.addEventListener("click", async () => {
   if (requestBtn.disabled) return;
   
   try {
+    // 弹窗输入原因
+    let reason = prompt("请输入申请出狱的原因（可选）", "");
+    if (reason === null) {
+      // 用户取消
+      return;
+    }
+    reason = reason.trim();
     requestBtn.disabled = true;
     const originalText = requestBtn.textContent;
     requestBtn.innerHTML = '<span class="loading"></span>申请中...';
     
     await updateDoc(jailDocRef, {
       requested: true,
+      requestReason: reason || ""
     });
     
-    // 发送申请出狱邮件
+    // 发送申请出狱邮件，带上原因
     try {
-      const emailResult = await sendPrisonEmail('requestRelease');
+      const emailResult = await sendPrisonEmail('requestRelease', { reason });
       if (emailResult.success) {
         showToast("申请已发送！邮件通知已发送 📧", "success");
       } else {
@@ -173,6 +188,74 @@ requestBtn.addEventListener("click", async () => {
     requestBtn.textContent = "🙏 申请出狱";
   }
 });
+
+// 解析刑期字符串为毫秒数
+function parseDurationToMs(durationStr) {
+  if (!durationStr) return 0;
+  if (durationStr.includes("分钟")) return parseInt(durationStr) * 60 * 1000;
+  if (durationStr.includes("小时")) return parseInt(durationStr) * 60 * 60 * 1000;
+  if (durationStr.includes("天")) return parseInt(durationStr) * 24 * 60 * 60 * 1000;
+  if (durationStr.includes("半天")) return 12 * 60 * 60 * 1000;
+  if (durationStr.includes("无期")) return 99 * 365 * 24 * 60 * 60 * 1000;
+  return 0;
+}
+
+// 显示倒计时
+function showCountdown(durationStr, startDate, jailed) {
+  clearCountdown();
+  if (!jailed) return;
+  const durationMs = parseDurationToMs(durationStr);
+  if (!durationMs || !startDate) return;
+  let endTime = startDate.getTime() + durationMs;
+  if (!countdownElem) {
+    countdownElem = document.createElement('div');
+    countdownElem.id = 'prisonCountdown';
+    countdownElem.style = 'margin-top: 1rem; font-size: 1.2rem; color: #ff6b6b; font-weight: bold;';
+    sentencePaper.appendChild(countdownElem);
+  }
+  function updateCountdown() {
+    const now = Date.now();
+    let left = endTime - now;
+    if (left <= 0) {
+      countdownElem.textContent = '刑期已满，等待释放...';
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+      // 可选：自动切换UI为自由状态（不改数据库）
+      emoji.textContent = "🌈";
+      emoji.className = "free";
+      statusText.textContent = "你现在自由啦～刑期已满 🕊";
+      statusText.className = "status-free";
+      requestBtn.style.display = "none";
+      freedomMsg.style.display = "block";
+      sentencePaper.style.display = "none";
+      return;
+    }
+    // 格式化剩余时间
+    let sec = Math.floor(left / 1000) % 60;
+    let min = Math.floor(left / 1000 / 60) % 60;
+    let hour = Math.floor(left / 1000 / 60 / 60) % 24;
+    let day = Math.floor(left / 1000 / 60 / 60 / 24);
+    let str = '';
+    if (day > 0) str += `${day}天`;
+    if (hour > 0) str += `${hour}小时`;
+    if (min > 0) str += `${min}分`;
+    str += `${sec}秒`;
+    countdownElem.textContent = `距离刑期结束：${str}`;
+  }
+  updateCountdown();
+  countdownTimer = setInterval(updateCountdown, 1000);
+}
+
+function clearCountdown() {
+  if (countdownTimer) {
+    clearInterval(countdownTimer);
+    countdownTimer = null;
+  }
+  if (countdownElem && countdownElem.parentNode) {
+    countdownElem.parentNode.removeChild(countdownElem);
+    countdownElem = null;
+  }
+}
 
 // 创建监狱粒子效果
 function createParticles() {

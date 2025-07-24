@@ -177,6 +177,10 @@ export async function sendPrisonEmail(type, additionalData = {}) {
         
       case 'requestRelease':
         templateParams.message = '你的男朋友正在恳求你的原谅，申请从恋爱监狱出来！';
+        if (additionalData.reason && additionalData.reason.trim()) {
+          templateParams.message += `\n\n【申请理由】${additionalData.reason.trim()}`;
+          templateParams.reason = additionalData.reason.trim();
+        }
         break;
         
       case 'released':
