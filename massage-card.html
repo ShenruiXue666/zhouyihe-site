@@ -227,15 +227,15 @@
             font-size: 4.5rem;
             font-weight: 900;
             margin: 16px 0;
-            color: #1a1a1a;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 25%, #f8b500 50%, #ff6b9d 75%, #c44569 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             letter-spacing: -0.02em;
+            animation: sparkle 3s ease-in-out infinite;
             position: relative;
-            text-shadow: 
-                0 0 10px rgba(255, 107, 157, 0.5),
-                0 0 20px rgba(255, 107, 157, 0.3),
-                0 0 30px rgba(255, 107, 157, 0.2),
-                0 2px 4px rgba(0, 0, 0, 0.3);
-            animation: numberGlow 2s ease-in-out infinite;
+            text-shadow: 0 4px 8px rgba(255, 107, 157, 0.3);
         }
 
         .count-display::before {
@@ -257,13 +257,9 @@
         }
 
         .massage-card.girlfriend .count-display {
-            color: #1a1a1a;
-            text-shadow: 
-                0 0 10px rgba(255, 105, 180, 0.6),
-                0 0 20px rgba(255, 105, 180, 0.4),
-                0 0 30px rgba(255, 105, 180, 0.3),
-                0 2px 4px rgba(0, 0, 0, 0.3);
-            animation: numberGlow 2.2s ease-in-out infinite;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff1493 25%, #ff69b4 50%, #ff6b9d 75%, #ff1493 100%);
+            background-size: 300% 300%;
+            animation: sparkle 2.5s ease-in-out infinite;
         }
 
         .count-label {
