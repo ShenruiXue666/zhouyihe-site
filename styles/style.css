@@ -1,39 +1,144 @@
+/* 通用样式 */
 body {
-  font-family: "Helvetica Neue", sans-serif;
-  background: #fffafc;
-  padding: 30px;
+  margin: 0;
+  padding: 0;
+  font-family: "PingFang SC", "Helvetica Neue", sans-serif;
+  background: linear-gradient(to bottom, #fff1f5, #f9f9ff);
+  color: #444;
+  line-height: 1.6;
+}
+
+h1, h2, h3 {
+  color: #d6336c;
   text-align: center;
+  margin-bottom: 20px;
 }
 
-textarea {
-  width: 300px;
-  height: 100px;
+p {
+  margin: 0 0 10px;
 }
 
+button {
+  padding: 10px 15px;
+  background: #f78da7;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #f45c9c;
+}
+
+input[type="text"], input[type="file"], textarea {
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+}
+
+/* 卡片通用样式 */
+.card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* 上传容器通用样式 */
+.upload-box {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 30px;
+  background: #ffffffcc;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* 留言展示区域卡片容器 */
 .gallery {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
   justify-content: center;
-  margin-top: 30px;
+  gap: 20px;
+  padding: 20px;
 }
 
-.card {
-  width: 250px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 10px;
-  background: #fff;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+.message-card img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 20px 20px 0 0;
 }
 
-.card img {
-  max-width: 100%;
-  border-radius: 8px;
+.message-text {
+  padding: 16px 18px;
+  font-size: 1em;
+  background: #ffeaf1;
+  border-radius: 0 0 20px 20px;
+  text-align: left;
 }
 
-.card p {
-  margin-top: 10px;
-  font-size: 16px;
-  color: #444;
+.timestamp {
+  font-size: 0.8em;
+  color: #aaa;
+  text-align: right;
+  padding: 6px 18px 10px;
+}
+/* 留言卡片删除按钮样式美化 */
+.card .delete-btn {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background: #f78da7;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  width: 90%;
+}
+
+.card .delete-btn:hover {
+  background: #f45c9c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+
+/* 响应式设计：手机适配 */
+@media (max-width: 768px) {
+  .upload-box,
+  .card {
+    margin: 10px;
+    width: 90%;
+  }
+
+  .gallery {
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+  }
+
+  input[type="text"],
+  textarea,
+  button {
+    font-size: 1em;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
 }

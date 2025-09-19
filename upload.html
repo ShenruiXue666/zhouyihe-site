@@ -1,18 +1,183 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <title>上传照片和留言</title>
-  <script type="module" src="./upload-script.js"></script>
-  <link rel="stylesheet" href="./style.css" />
+  <meta charset="UTF-8" />
+  <title>上传照片和留言 ✨</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./styles/style.css" />
+  <script type="module" src="./scripts/upload-script.js"></script>
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #fff1f5, #f9f9ff);
+      font-family: "PingFang SC", "Helvetica Neue", sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+      color: #444;
+      overflow-x: hidden;
+    }
+
+    .floating-heart {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: url("./assets/heart.png") no-repeat center/contain;
+      animation: floatUp 5s ease-in infinite;
+      opacity: 0.6;
+      z-index: 0;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 0.6; }
+      100% { transform: translateY(-300px) scale(1.2); opacity: 0; }
+    }
+
+    .nav {
+      margin-bottom: 30px;
+      z-index: 1;
+      position: relative;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #f45c9c;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+
+    h1 {
+      color: #d6336c;
+      font-size: 2em;
+    }
+
+    .upload-box {
+      background: #ffffffdd;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      padding: 30px;
+      max-width: 420px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+      z-index: 1;
+      position: relative;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      resize: none;
+      background: #fffafc;
+    }
+
+    button {
+      padding: 12px;
+      font-size: 1em;
+      background-color: #f78da7;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #f45c9c;
+    }
+
+    .custom-file-upload {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .upload-label {
+      background: #f78da7;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.2s ease;
+      display: inline-block;
+    }
+
+    .upload-label:hover {
+      background: #f45c9c;
+    }
+
+    #imageInput {
+      display: none;
+    }
+
+    #fileName {
+      font-size: 14px;
+      color: #666;
+    }
+
+    #status {
+      font-size: 14px;
+      color: #999;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5em;
+      }
+      .upload-box {
+        width: 95%;
+        padding: 20px;
+      }
+      .upload-label {
+        font-size: 14px;
+      }
+      button {
+        font-size: 1em;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>留下你的一句话 💌</h1>
-  <input type="file" id="imageInput" />
-  <br />
-  <textarea id="message" placeholder="对申睿说点什么吧"></textarea>
-  <br />
-  <button id="uploadBtn">上传</button>
-  <p id="status"></p>
+  <div class="nav">
+    <a href="./index.html">🏠 首页</a>
+    <a href="./gallery.html">💌 查看留言</a>
+  </div>
+
+  <h1>🌸 留下你的一句话 🌸</h1>
+
+  <div class="upload-box">
+    <div class="custom-file-upload">
+      <label for="imageInput" class="upload-label">📷 选择一张照片</label>
+      <span id="fileName">未选择任何文件</span>
+      <input type="file" id="imageInput" />
+    </div>
+
+    <textarea id="message" placeholder="写点想说的话吧..."></textarea>
+    <button id="uploadBtn">上传</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    // 生成浮动心形动画
+    const generateHearts = () => {
+      for (let i = 0; i < 20; i++) {
+        const heart = document.createElement("div");
+        heart.className = "floating-heart";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.top = Math.random() * 120 + 100 + "px";
+        heart.style.animationDelay = (Math.random() * 5) + "s";
+        document.body.appendChild(heart);
+      }
+    };
+    generateHearts();
+  </script>
 </body>
 </html>

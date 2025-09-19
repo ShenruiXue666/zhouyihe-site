@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>按摩次卡 - 爱的按摩</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <style>
+        .cards-container {
+            max-width: 900px;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .massage-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .massage-card.girlfriend {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+
+        .massage-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(30deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(30deg); }
+        }
+
+        .card-header {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 30px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .massage-count {
+            position: relative;
+            z-index: 1;
+            margin: 30px 0;
+        }
+
+        .count-display {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            color: #ffd700;
+        }
+
+        .count-label {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .controls {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .btn-add {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-use {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+        }
+
+        .btn-use:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .add-form {
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .add-form.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+            min-width: 80px;
+        }
+
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-confirm {
+            background: #007bff;
+            color: white;
+        }
+
+        .status-message {
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .status-success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+        }
+
+        .status-error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #ff6b6b;
+        }
+
+        .back-link {
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link a:hover {
+            opacity: 1;
+        }
+
+        .hearts {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 20px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                gap: 20px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cards-container">
+        <!-- 我给女朋友的按摩卡 -->
+        <div class="massage-card">
+            <div class="hearts">💕</div>
+            
+            <div class="card-header">
+                <h1 class="card-title">我给她的按摩卡</h1>
+                <p class="card-subtitle">为最爱的她准备的专属按摩卡</p>
+            </div>
+
+            <div class="massage-count">
+                <div class="count-display" id="myCountDisplay">0</div>
+                <p class="count-label">剩余按摩次数</p>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-add" id="myAddBtn">增加次数</button>
+                <button class="btn btn-use" id="myUseBtn" disabled>确认按摩</button>
+            </div>
+
+            <div class="add-form" id="myAddForm">
+                <div class="form-group">
+                    <label for="myAddCount">增加次数：</label>
+                    <input type="number" id="myAddCount" min="1" max="100" value="1">
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-small btn-cancel" id="myCancelBtn">取消</button>
+                    <button class="btn btn-small btn-confirm" id="myConfirmBtn">确认</button>
+                </div>
+            </div>
+
+            <div class="status-message" id="myStatusMessage"></div>
+        </div>
+
+        <!-- 女朋友给我的按摩卡 -->
+        <div class="massage-card girlfriend">
+            <div class="hearts">💖</div>
+            
+            <div class="card-header">
+                <h1 class="card-title">她给我的按摩卡</h1>
+                <p class="card-subtitle">她给我的专属按摩卡</p>
+            </div>
+
+            <div class="massage-count">
+                <div class="count-display" id="herCountDisplay">0</div>
+                <p class="count-label">剩余按摩次数</p>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-add" id="herAddBtn">增加次数</button>
+                <button class="btn btn-use" id="herUseBtn" disabled>确认按摩</button>
+            </div>
+
+            <div class="add-form" id="herAddForm">
+                <div class="form-group">
+                    <label for="herAddCount">增加次数：</label>
+                    <input type="number" id="herAddCount" min="1" max="100" value="1">
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-small btn-cancel" id="herCancelBtn">取消</button>
+                    <button class="btn btn-small btn-confirm" id="herConfirmBtn">确认</button>
+                </div>
+            </div>
+
+            <div class="status-message" id="herStatusMessage"></div>
+        </div>
+    </div>
+
+    <div class="back-link" style="text-align: center; margin: 20px;">
+        <a href="index.html" style="color: #667eea; text-decoration: none; font-weight: bold;">← 返回首页</a>
+    </div>
+
+    <script type="module" src="scripts/massage-card-script.js"></script>
+</body>
+</html>

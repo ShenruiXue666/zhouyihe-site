@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>一周年密信</title>
+  <style>
+    body {
+      font-family: "PingFang SC", sans-serif;
+      background: linear-gradient(to bottom, #fff1f5, #f9f9ff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .nav {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      background: #f78da7;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 0.95em;
+    }
+
+    #waxSeal {
+      cursor: pointer;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(#a51c30, #720d1b);
+      border-radius: 50%;
+      box-shadow: 0 0 0 10px #fff0f5, 0 4px 12px rgba(0,0,0,0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.5em;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      animation: pulse 2s infinite;
+    }
+
+    #waxSeal:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 10px #fff0f5, 0 4px 12px rgba(0,0,0,0.2); }
+      50% { box-shadow: 0 0 0 20px #ffe4ec44, 0 8px 16px rgba(0,0,0,0.3); }
+      100% { box-shadow: 0 0 0 10px #fff0f5, 0 4px 12px rgba(0,0,0,0.2); }
+    }
+
+    #modal {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      max-width: 600px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      position: absolute;
+      top: 10%;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #modal p {
+      font-size: 1.2em;
+      line-height: 1.8em;
+      color: #555;
+      text-align: center;
+    }
+
+    #modal button {
+      margin-top: 20px;
+      background: #f78da7;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <a href="./index.html">首页</a>
+    <a href="./gallery.html">留言阅览</a>
+  </div>
+
+  <div id="waxSeal" onclick="openModal()">密信缩印</div>
+
+  <div style="margin-top: 20px;">
+    <button onclick="tryPeek()" style="background:#888; color:white; padding:10px 20px; border:none; border-radius:10px; cursor:pointer;">🙈 想探头看看</button>
+  </div>
+
+  <div id="modal">
+    <p id="modalText">加载中...</p>
+    <input type="text" id="secretCode" placeholder="输入我们的安全词" style="display:none; padding:8px; margin-top:10px; width:100%; max-width:300px;">
+    <button id="secretSubmit" onclick="validateCode()" style="display:none;">提交</button>
+    <button onclick="closeModal()">关闭</button>
+  </div>
+
+  <script type="module">
+    import { openModal, closeModal } from "./scripts/anniversary-script.js";
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+
+    let peekStage = 0;
+    window.tryPeek = function() {
+      const modal = document.getElementById("modal");
+      const modalText = document.getElementById("modalText");
+      const input = document.getElementById("secretCode");
+      const submit = document.getElementById("secretSubmit");
+      modal.style.display = "flex";
+
+      if (peekStage === 0) {
+        modalText.innerHTML = `🧐 你想偷偷看我们的信？<br><br>现在打开就没有惊喜啦...<br><br>
+        <button onclick="confirmPeek(false)" style="background:#888;">我想想...</button>
+        <button onclick="confirmPeek(true)" style="background:#d6336c;">真的要偷看！</button>`;
+        input.style.display = 'none';
+        submit.style.display = 'none';
+        peekStage = 1;
+      }
+    }
+
+    window.confirmPeek = function(wantsToPeek) {
+      const modalText = document.getElementById("modalText");
+      const input = document.getElementById("secretCode");
+      const submit = document.getElementById("secretSubmit");
+
+      if (!wantsToPeek) {
+        modalText.innerHTML = "👏 做得好！再等等，就快到2026啦💖";
+        input.style.display = 'none';
+        submit.style.display = 'none';
+        return;
+      }
+
+      modalText.innerHTML = `🤫 只有说出我们的安全词，才能继续……`;
+      input.style.display = 'block';
+      submit.style.display = 'inline-block';
+    }
+
+    window.validateCode = function() {
+      const input = document.getElementById("secretCode").value.trim();
+      const modalText = document.getElementById("modalText");
+
+      if (input === "天王盖地虎") {
+        modalText.innerHTML = `🤭 你居然还记得！不过……<br><br>
+        📜 我们说好的一周年才一起打开～现在可不能作弊哟～<br><br>
+        💌 等待的过程才最甜蜜。`;
+      } else {
+        modalText.innerHTML = `❌ 哎呀，居然忘了我们的安全词！<br><br>
+        要不要再想一想？🧠<br><br>
+        提示：四个字，江湖暗号 🐯<br><br>
+        <button onclick="tryPeek()" style="margin-top:12px;">重新尝试</button>`;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+rules_version = '2';
+
+// 允许所有人读写图片文件（用于生日网站）
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /images/{allPaths=**} {
+      allow read, write: if true;
+    }
+    match /memory-images/{allPaths=**} {
+      allow read, write: if true;
+    }
+  }
+}

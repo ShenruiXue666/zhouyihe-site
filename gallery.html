@@ -2,12 +2,116 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <title>她写给你的话 💌</title>
-  <link rel="stylesheet" href="./style.css" />
-  <script type="module" src="./gallery-script.js"></script>
+  <title>写给大王的话 💗</title>
+  <script type="module" src="./scripts/gallery-script.js"></script>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #fff1f5, #f9f9ff);
+      font-family: "Helvetica Neue", "PingFang SC", sans-serif;
+      color: #444;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .nav {
+      margin-bottom: 20px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #f45c9c;
+      margin: 0 12px;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: 1.9em;
+      color: #d6336c;
+      margin-bottom: 30px;
+    }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: center;
+    }
+
+    .card {
+      width: 280px;
+      border-radius: 16px;
+      background: #fffdfd;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      padding: 16px;
+      text-align: center;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+    }
+
+    .card img {
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 14px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+
+    .card p {
+      font-size: 15px;
+      color: #555;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: #fff0f5;
+      box-shadow: inset 0 0 4px rgba(0,0,0,0.04);
+      line-height: 1.6em;
+    }
+
+    .timestamp {
+      font-size: 0.85em;
+      color: #999;
+      margin-top: -4px;
+    }
+    .delete-btn {
+    margin-top: 12px;
+    padding: 10px 16px;
+    background: #f78da7;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: "Helvetica Neue", "PingFang SC", sans-serif;
+    cursor: pointer;
+    width: 90%;
+    transition: all 0.2s ease;
+  }
+
+  .delete-btn:hover {
+    background: #f45c9c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+    @media (max-width: 480px) {
+      .card {
+        width: 90%;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>她留下的照片和留言 🥺</h1>
-  <div id="gallery" class="gallery"></div>
+  <div class="nav">
+    <a href="./index.html">🏠 首页</a>
+    <a href="./upload.html">📸 上传留言</a>
+  </div>
+
+  <h1>💗 写给大王的话 💗</h1>
+
+  <div class="gallery" id="gallery"></div>
 </body>
 </html>
