@@ -6,230 +6,353 @@
     <title>按摩次卡 - 爱的按摩</title>
     <link rel="stylesheet" href="styles/style.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
         .cards-container {
-            max-width: 900px;
-            margin: 30px auto;
+            max-width: 1200px;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
             padding: 20px;
         }
 
         .massage-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            color: white;
-            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 40px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 1px 2px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .massage-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 
+                0 32px 64px rgba(0, 0, 0, 0.15),
+                0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
         .massage-card.girlfriend {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(238, 90, 82, 0.1) 100%);
+            border: 1px solid rgba(255, 107, 107, 0.2);
+        }
+
+        .massage-card.girlfriend::before {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(238, 90, 82, 0.1) 100%);
         }
 
         .massage-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: shimmer 3s ease-in-out infinite;
-        }
-
-        @keyframes shimmer {
-            0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(30deg); }
-            50% { transform: translateX(100%) translateY(100%) rotate(30deg); }
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border-radius: 32px;
+            z-index: 0;
         }
 
         .card-header {
             position: relative;
-            z-index: 1;
-            margin-bottom: 30px;
+            z-index: 2;
+            margin-bottom: 32px;
+            text-align: center;
         }
 
         .card-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
         }
 
         .card-subtitle {
-            font-size: 14px;
-            opacity: 0.9;
+            font-size: 0.95rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .massage-card.girlfriend .card-title {
+            color: #dc2626;
         }
 
         .massage-count {
             position: relative;
-            z-index: 1;
-            margin: 30px 0;
+            z-index: 2;
+            margin: 40px 0;
+            text-align: center;
         }
 
         .count-display {
-            font-size: 48px;
-            font-weight: bold;
-            margin: 20px 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            color: #ffd700;
+            font-size: 4rem;
+            font-weight: 800;
+            margin: 16px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .massage-card.girlfriend .count-display {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .count-label {
-            font-size: 16px;
-            opacity: 0.9;
+            font-size: 1rem;
+            color: #6b7280;
+            font-weight: 500;
         }
 
         .controls {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             display: flex;
-            gap: 15px;
+            gap: 16px;
             justify-content: center;
-            margin-top: 30px;
+            margin-top: 32px;
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 16px 32px;
             border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 120px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 140px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn-add {
-            background: linear-gradient(45deg, #4CAF50, #45a049);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
         }
 
         .btn-add:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
         }
 
         .btn-use {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             color: white;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
         }
 
         .btn-use:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
         }
 
         .btn:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
+            box-shadow: none !important;
         }
 
         .add-form {
             position: relative;
-            z-index: 1;
-            margin-top: 20px;
+            z-index: 2;
+            margin-top: 24px;
             display: none;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .add-form.show {
             display: block;
-            animation: slideDown 0.3s ease;
+            animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { 
+                opacity: 0; 
+                transform: translateY(-20px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #374151;
         }
 
         .form-group input {
             width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
             text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .form-actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
         }
 
         .btn-small {
-            padding: 8px 16px;
-            font-size: 14px;
-            min-width: 80px;
+            padding: 12px 24px;
+            font-size: 0.9rem;
+            min-width: 100px;
         }
 
         .btn-cancel {
-            background: #6c757d;
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
             color: white;
+            box-shadow: 0 4px 14px rgba(107, 114, 128, 0.3);
         }
 
         .btn-confirm {
-            background: #007bff;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: white;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
         }
 
         .status-message {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             margin-top: 20px;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 14px;
+            padding: 16px 20px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
             display: none;
+            backdrop-filter: blur(10px);
         }
 
         .status-success {
-            background: rgba(76, 175, 80, 0.2);
-            border: 1px solid #4CAF50;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #065f46;
         }
 
         .status-error {
-            background: rgba(255, 107, 107, 0.2);
-            border: 1px solid #ff6b6b;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #991b1b;
         }
 
         .back-link {
-            position: relative;
-            z-index: 1;
-            margin-top: 20px;
+            text-align: center;
+            margin: 40px 0;
         }
 
         .back-link a {
-            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #6b7280;
             text-decoration: none;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
+            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
         }
 
         .back-link a:hover {
-            opacity: 1;
+            color: #374151;
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
 
         .hearts {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 20px;
-            animation: heartbeat 1.5s ease-in-out infinite;
+            top: 24px;
+            right: 24px;
+            font-size: 24px;
+            animation: heartbeat 2s ease-in-out infinite;
+            z-index: 3;
         }
 
         @keyframes heartbeat {
@@ -237,17 +360,64 @@
             50% { transform: scale(1.1); }
         }
 
+        .massage-card.girlfriend .hearts {
+            animation: heartbeat 1.8s ease-in-out infinite;
+        }
+
         @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
             .cards-container {
                 grid-template-columns: 1fr;
-                max-width: 400px;
-                gap: 20px;
-                padding: 10px;
+                gap: 24px;
+                padding: 0;
+            }
+
+            .massage-card {
+                padding: 32px 24px;
+            }
+
+            .count-display {
+                font-size: 3rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .btn {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.75rem;
+            }
+
+            .massage-card {
+                padding: 24px 20px;
+            }
+
+            .count-display {
+                font-size: 2.5rem;
             }
         }
     </style>
 </head>
 <body>
+    <div class="page-header">
+        <h1 class="page-title">按摩次卡</h1>
+        <p class="page-subtitle">记录我们之间的专属按摩时光</p>
+    </div>
+
     <div class="cards-container">
         <!-- 我给女朋友的按摩卡 -->
         <div class="massage-card">
