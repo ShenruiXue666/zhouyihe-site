@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>吃什么/去哪儿转盘</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #ffeef6 0%, #f9f9ff 100%);
+      min-height: 100vh;
+    }
+    .roulette-container { max-width: 500px; margin: 48px auto; padding: 32px 20px 28px 20px; background: #fff; border-radius: 20px; box-shadow: 0 4px 32px #f7b5c7a0; position: relative; }
+    .roulette-title { text-align: center; font-size: 2.1rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: 1px; background: linear-gradient(90deg, #d6336c, #f78da7, #ff9eb5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .roulette-sub { text-align: center; color: #d6336c; font-size: 1.1rem; margin-bottom: 1.5rem; letter-spacing: 0.5px; }
+    .gpt-desc-card { background: #fff6fa; border-left: 4px solid #f78da7; border-radius: 12px; margin: 18px 0 10px 0; padding: 14px 18px; color: #d6336c; font-size: 1rem; box-shadow: 0 2px 8px #f7b5c733; white-space: pre-line; }
+    .input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .input-row input { flex: 1; border: 1.5px solid #f78da7; border-radius: 8px; padding: 8px 12px; font-size: 1rem; outline: none; transition: border 0.2s; }
+    .input-row input:focus { border: 1.5px solid #d6336c; }
+    .input-row button { border-radius: 8px; background: linear-gradient(90deg, #f78da7, #d6336c); color: #fff; border: none; padding: 8px 18px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .input-row button:active { background: #d6336c; }
+    .option-list { margin: 18px 0 10px 0; display: flex; flex-wrap: wrap; gap: 8px; }
+    .option-item { display: flex; align-items: center; background: #ffeef6; margin: 0; padding: 7px 16px; border-radius: 18px; font-size: 1rem; color: #d6336c; box-shadow: 0 1px 4px #f7b5c733; }
+    .option-item button { margin-left: 10px; background: #f78da7; color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; }
+    .option-item button:active { background: #d6336c; }
+    .wheel-canvas { display: block; margin: 32px auto 18px auto; background: #fafafa; border-radius: 50%; box-shadow: 0 2px 12px #f7b5c7a0; }
+    .center-btn { display: block; margin: 18px auto 0 auto; padding: 12px 38px; font-size: 1.15rem; border-radius: 10px; background: linear-gradient(90deg, #4f8cff, #7ecbff); color: #fff; border: none; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px #b5d7ff80; transition: background 0.2s; }
+    .center-btn:active { background: #3570c7; }
+    #result { text-align:center; font-size: 1.25rem; margin-top:20px; color: #d6336c; font-weight: 700; letter-spacing: 1px; }
+    .back-home-btn {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 18px;
+      background: linear-gradient(90deg, #f78da7, #d6336c);
+      color: #fff;
+      border-radius: 18px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 2px 8px #f7b5c733;
+      transition: background 0.2s, transform 0.2s;
+      position: relative;
+    }
+    .back-home-btn:hover {
+      background: #d6336c;
+      transform: translateY(-2px) scale(1.04);
+    }
+    @media (max-width: 600px) {
+      .roulette-container { max-width: 98vw; padding: 16px 2vw 18px 2vw; }
+      .wheel-canvas { width: 90vw !important; height: 90vw !important; max-width: 340px; max-height: 340px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="roulette-container">
+    <a href="index.html" class="back-home-btn">← 返回主页</a>
+    <div class="roulette-title">🎡灵感转盘</div>
+    <div class="roulette-sub">让AI帮你们决定今天的美好去处或美食吧！</div>
+    <div class="input-row">
+      <input id="question-input" type="text" placeholder="输入你的问题，如：今天吃什么？">
+      <button id="gpt-btn">让GPT帮我想</button>
+    </div>
+    <div class="input-row">
+      <input id="manual-option" type="text" placeholder="手动添加选项">
+      <button id="add-option-btn">添加</button>
+    </div>
+    <div id="gpt-desc" class="gpt-desc-card" style="display:none;"></div>
+    <div class="option-list" id="option-list"></div>
+    <canvas id="wheel" width="350" height="350" class="wheel-canvas"></canvas>
+    <button class="center-btn" id="spin-btn">转动转盘</button>
+    <div id="result"></div>
+  </div>
+  <script src="scripts/roulette.js"></script>
+</body>
+</html> 
